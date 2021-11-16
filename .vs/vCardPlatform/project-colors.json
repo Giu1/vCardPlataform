@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "44cc78ce-bf43-47bd-9b13-fc04153a620b": {
+      "ProjectGuid": "44cc78ce-bf43-47bd-9b13-fc04153a620b",
+      "DisplayName": "AdminConsole",
+      "ColorIndex": 0
+    },
+    "2ffd75b0-669a-4c35-881d-5390dbb1f100": {
+      "ProjectGuid": "2ffd75b0-669a-4c35-881d-5390dbb1f100",
+      "DisplayName": "bank1-API",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 2
+}

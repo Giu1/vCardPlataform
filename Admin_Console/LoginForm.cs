@@ -30,10 +30,17 @@ namespace Admin_Console
         {
             email = label1.Text;
             password = label2.Text;
-            var f = new WindowsApplication1 .Form1();
-f.Show();
-            Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory.SolutionFolder(), @"Admin_Console\bin\debug\AdminConsole.exe"));
+            Form console = new AdminConsole();
+            console.Show();
+            Form loginhere = new LoginForm();
+            loginhere.Hide();
+            
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lucas\\Documents\\GitHub\\js\\Admin_Console\\Admin_Console.csproj": {}
+    "C:\\Users\\lucas\\source\\repos\\vCardPlataform\\Admin_Console\\Admin_Console.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lucas\\Documents\\GitHub\\js\\Admin_Console\\Admin_Console.csproj": {
+    "C:\\Users\\lucas\\source\\repos\\vCardPlataform\\Admin_Console\\Admin_Console.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lucas\\Documents\\GitHub\\js\\Admin_Console\\Admin_Console.csproj",
+        "projectUniqueName": "C:\\Users\\lucas\\source\\repos\\vCardPlataform\\Admin_Console\\Admin_Console.csproj",
         "projectName": "Admin_Console",
-        "projectPath": "C:\\Users\\lucas\\Documents\\GitHub\\js\\Admin_Console\\Admin_Console.csproj",
+        "projectPath": "C:\\Users\\lucas\\source\\repos\\vCardPlataform\\Admin_Console\\Admin_Console.csproj",
         "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lucas\\Documents\\GitHub\\js\\Admin_Console\\obj\\",
+        "outputPath": "C:\\Users\\lucas\\source\\repos\\vCardPlataform\\Admin_Console\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
