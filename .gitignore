@@ -2,3 +2,14 @@
 obj/Debug/bank1-API.csproj.AssemblyReference.cache
 
 obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+.vs/vCardPlatform/config/applicationhost.config
+.vs/vCardPlatform/DesignTimeBuild/.dtbcache.v2
+*.config
+.vs/vCardPlatform/config/applicationhost.config
+.vs/vCardPlatform/project-colors.json
+.vs/vCardPlatform/v17/.suo
+Admin_Console/obj/Admin_Console.csproj.nuget.dgspec.json
+Admin_Console/obj/Debug/net6.0-windows/Admin_Console.assets.cache
+Admin_Console/obj/Debug/net6.0-windows/Admin_Console.GeneratedMSBuildEditorConfig.editorconfig
+Admin_Console/obj/project.assets.json
+Admin_Console/obj/project.nuget.cache
