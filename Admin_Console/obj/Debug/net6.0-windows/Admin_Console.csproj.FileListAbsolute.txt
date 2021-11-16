@@ -1,0 +1,8 @@
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.csproj.AssemblyReference.cache
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.AdminConsole.resources
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.LoginForm.resources
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.csproj.GenerateResource.cache
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.AssemblyInfoInputs.cache
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.AssemblyInfo.cs
+C:\Users\lucas\Documents\GitHub\js\Admin_Console\obj\Debug\net6.0-windows\Admin_Console.csproj.CoreCompileInputs.cache
