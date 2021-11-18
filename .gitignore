@@ -3,8 +3,16 @@ obj/Debug/bank1-API.csproj.AssemblyReference.cache
 
 obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 
+bin/roslyn/Microsoft.CodeAnalysis.dll
+
 Admin_Console/obj/
+
+bin/roslyn/
 
 bin/
 
 obj/Debug/
+
+vCardPlatform.sln
+
+.vs/vCardPlatform/v16/.suo
