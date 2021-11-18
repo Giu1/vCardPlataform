@@ -13,3 +13,11 @@ Admin_Console/obj/Debug/net6.0-windows/Admin_Console.assets.cache
 Admin_Console/obj/Debug/net6.0-windows/Admin_Console.GeneratedMSBuildEditorConfig.editorconfig
 Admin_Console/obj/project.assets.json
 Admin_Console/obj/project.nuget.cache
+
+bin/
+
+obj/Debug/
+
+vCardPlatform.sln
+
+.vs/vCardPlatform/v16/.suo
