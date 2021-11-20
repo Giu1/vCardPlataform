@@ -114,6 +114,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\BD-Bank1.mdf" />
+    <Content Include="App_Data\BD-Bank1_log.ldf">
+      <DependentUpon>BD-Bank1.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\Database.mdf" />
     <Content Include="App_Data\Database_log.ldf">
       <DependentUpon>Database.mdf</DependentUpon>
@@ -127,10 +131,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BankController.cs" />
     <Compile Include="Controllers\ContaController.cs" />
+    <Compile Include="Controllers\MovimentosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\MovimentoBancario.cs" />
     <Compile Include="Models\Conta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -158,7 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="Views\Bank\" />
     <Folder Include="Views\Conta\" />
+    <Folder Include="Views\Movimentos\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
