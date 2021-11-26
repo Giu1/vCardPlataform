@@ -6,11 +6,11 @@ using System.Web.Http;
 
 namespace vCardPlatform.Controllers
 {
-    [RoutePrefix("api/bank")]
+    [RoutePrefix("bank_1/bank")]
     public class BankController : ApiController
     {
 
-        private string bankId = "Bank_1";
+        private string bankId = "bank_1";
         // GET: Bank
 
         [Route("")]

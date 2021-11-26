@@ -11,7 +11,7 @@ using vCardPlatform.Models;
 
 namespace vCardPlatform.Controllers
 {
-    [RoutePrefix("api/conta")]
+    [RoutePrefix("bank_1/conta")]
     public class ContaController : ApiController
     {
 

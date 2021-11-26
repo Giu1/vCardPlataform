@@ -8,7 +8,7 @@ using vCardPlatform.Models;
 
 namespace vCardPlatform.Controllers
 {
-    [RoutePrefix("api/movimentos")]
+    [RoutePrefix("bank_1/movimentos")]
     public class MovimentosController : ApiController
     {
 

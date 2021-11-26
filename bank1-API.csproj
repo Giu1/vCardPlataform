@@ -118,10 +118,6 @@
     <Content Include="App_Data\BD-Bank1_log.ldf">
       <DependentUpon>BD-Bank1.mdf</DependentUpon>
     </Content>
-    <Content Include="App_Data\Database.mdf" />
-    <Content Include="App_Data\Database_log.ldf">
-      <DependentUpon>Database.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
