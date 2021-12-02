@@ -5,8 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using vCardPlatform.Models;
 
@@ -20,15 +22,22 @@ namespace ClientApp
         {
             InitializeComponent();
             AuthUser = user;
+            LoadElements();
+        }
+
+        private void LoadElements()
+        {
             this.label1.Text = AuthUser.AccountOwner;
             this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            if (user.Photo != null)
+            this.label4.Text = AuthUser.Balance + " €";
+            if (AuthUser.Photo != null)
             {
-                this.pictureBox1.Image = Image.FromStream(new MemoryStream(Convert.FromBase64String(user.Photo)));
+                this.pictureBox1.Image = Image.FromStream(new MemoryStream(Convert.FromBase64String(AuthUser.Photo)));
+
             }
             else
             {
-                //this.pictureBox1.Image = (Image)Properties.Resources.head_the_dummy_avatar_man_tie_72756;
+                this.pictureBox1.Image = (Image)Properties.Resources.defautImage;
             }
         }
 
@@ -41,13 +50,41 @@ namespace ClientApp
         private void button1_Click(object sender, EventArgs e)
         {
             ProfileForm f2 = new ProfileForm(AuthUser);
+            if (f2.ShowDialog() != DialogResult.OK)
+            {
+                // The user canceled.
+                this.Close();
+            }
 
-            f2.Show();
-
-
-
+            ReloadUser();
         }
 
+        private void ReloadUser()
+        {
+            string link = String.Format("http://localhost:50766/api/conta/" + AuthUser.Id);
+            WebRequest requestPassword = WebRequest.Create(link);
+            requestPassword.Method = "GET";
+            HttpWebResponse responsePassword = null;
 
+            responsePassword = (HttpWebResponse)requestPassword.GetResponse();
+
+            String strResul = null;
+            using (Stream stream = responsePassword.GetResponseStream())
+            {
+
+                StreamReader reader = new StreamReader(stream);
+                strResul = reader.ReadToEnd();
+                reader.Close();
+            }
+
+            var serializer = new JavaScriptSerializer();
+
+            AuthUser = (User)serializer.Deserialize(strResul, typeof(User));
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

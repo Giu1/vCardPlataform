@@ -72,6 +72,7 @@ namespace ClientApp
                 user.Email = textBox7.Text;
             }
 
+            bool checkPassword = false;
             if (textBox3.Text.Length > 0)
             {
 
@@ -79,6 +80,7 @@ namespace ClientApp
                 if (textBox3.Text.CompareTo(textBox4.Text) == 0)
                 {
                     user.Password = Hash_SHA256(textBox3.Text);
+                    checkPassword = true;
 
                 }
                 else
@@ -100,8 +102,8 @@ namespace ClientApp
                 try
                 {
                     int confirmationCode = Int16.Parse(textBox5.Text);
-
                     user.ConfirmationCode = confirmationCode;
+                    checkPassword = true;
 
 
                 }
@@ -112,6 +114,17 @@ namespace ClientApp
                     return;
                 }
 
+            }
+
+            if (checkPassword == true)
+            {
+                PasswordForm frm = new PasswordForm(AuthUser);
+                if (frm.ShowDialog() != DialogResult.OK)
+                {
+                    // The user canceled.
+                    this.Close();
+                }
+                
             }
 
             string link = String.Format("http://localhost:50766/api/conta/" + user.Id);
@@ -136,9 +149,10 @@ namespace ClientApp
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    //refresh elements //TODO
+                    this.DialogResult = DialogResult.OK;
                     AuthUser = user;
-                    ReloadElements();
+                    MessageBox.Show("Alterações realizadas com sucesso");
+                    return;
 
                 }
 

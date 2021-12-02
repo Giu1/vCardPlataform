@@ -97,6 +97,7 @@ namespace ClientApp
             if (obj.Password.CompareTo(password) != 0)
             {
                 MessageBox.Show("Password incorreta");
+                return;
 
             }
 
