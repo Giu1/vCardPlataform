@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,7 +10,7 @@ using vCardPlatform.Models;
 
 namespace vCardPlatform.Controllers
 {
-    [RoutePrefix("api/conta")]
+    [RoutePrefix("bank_1/conta")]
     public class ContaController : ApiController
     {
 

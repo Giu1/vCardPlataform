@@ -23,3 +23,7 @@ vCardPlatform.sln
 .vs/vCardPlatform/v16/.suo
 
 Admin_Console/obj/
+
+ClientApp/obj/Debug/
+
+vCardPlatformAPI/obj/Debug/
