@@ -27,3 +27,6 @@ Admin_Console/obj/
 ClientApp/obj/Debug/
 
 vCardPlatformAPI/obj/Debug/
+
+vCardPlatformAPI/Web.config
+Web.config
