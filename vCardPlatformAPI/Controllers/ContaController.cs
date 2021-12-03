@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Http;
 using vCardPlatform.Models;
+using vCardPlatformAPI.Models;
 
 namespace vCardPlatformApi.Controllers
 {

@@ -10,6 +10,7 @@ namespace vCardPlatform.Models
     {
         public int Id { get; set; }
 
+        public string Type { get; set; }
         public string IdSender { get; set; }
         public string IdBankSender { get; set; }
         public string IdReceiver { get; set; }
@@ -21,5 +22,11 @@ namespace vCardPlatform.Models
         public string Date { get; set;}
 
 
+    }
+
+    public enum TypeOfMoviment
+    {
+        CREDIT,
+        DEBIT
     }
 }

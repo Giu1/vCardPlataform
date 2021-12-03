@@ -57,6 +57,7 @@ namespace ClientApp
             }
 
             ReloadUser();
+            LoadElements();
         }
 
         private void ReloadUser()
