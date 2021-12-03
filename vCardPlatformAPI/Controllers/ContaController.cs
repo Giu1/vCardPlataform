@@ -270,5 +270,60 @@ namespace vCardPlatformApi.Controllers
             }
         }
 
+        [Route("")]
+        [HttpPost]
+        public IHttpActionResult Post(User user)
+        {
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            SqlDataReader reader = null;
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                if (user.Photo != null)
+                {
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,@photo,@password)";
+                    command = new SqlCommand(cmdSQL, connection);
+                    command.Parameters.AddWithValue("@photo", Convert.FromBase64String(user.Photo));
+                }
+                else
+                {
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,NULL,@password)";
+                    command = new SqlCommand(cmdSQL, connection);
+                }
+
+                command.Parameters.AddWithValue("@PhoneNumber", user.Id);
+                command.Parameters.AddWithValue("@accountowner", user.AccountOwner);
+                command.Parameters.AddWithValue("@CreatedAt", DateTime.Now.ToString("dd / MM / yyyy"));
+                command.Parameters.AddWithValue("@confirmationcode", user.ConfirmationCode);
+                command.Parameters.AddWithValue("@password", user.Password);
+                command.Parameters.AddWithValue("@email", user.Email);
+
+                int numRows = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (numRows > 0)
+                {
+                    return Ok();
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+        }
     }
 }
