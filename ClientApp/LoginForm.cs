@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using vCardPlatform.Models;
+//using vCardPlatformAPI.Models;
 
 namespace ClientApp
 {

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace vCardPlatformAPI.Models
 {
-    public class ContaBankSide
+    public class UserBankSide
     {
         public int Id { get; set; }
         public string AccountOwner { get; set; }
