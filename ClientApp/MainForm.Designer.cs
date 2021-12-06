@@ -82,6 +82,7 @@ namespace ClientApp
             this.button2.TabIndex = 3;
             this.button2.Text = "Enviar dinheiro";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
             // 
@@ -128,7 +129,7 @@ namespace ClientApp
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(127, 45);
             this.button4.TabIndex = 8;
-            this.button4.Text = "Enviar dinheiro";
+            this.button4.Text = "Realizar Transferência";
             this.button4.UseVisualStyleBackColor = true;
             // 
             // button5
