@@ -10,7 +10,7 @@ namespace vCardPlatform.Controllers
     public class BankController : ApiController
     {
 
-        private string bankId = "bank_1";
+        private string bankId = "1111";
         // GET: Bank
 
         [Route("")]

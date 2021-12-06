@@ -18,7 +18,7 @@ namespace vCardPlatform.Controllers
         // GET: Conta/GetContaById/1
         [Route("{id}")]
         [HttpGet]
-        public IHttpActionResult GetConta(int id)
+        public IHttpActionResult GetConta(string id)
         {
             SqlConnection connection = null;
             try
@@ -35,12 +35,11 @@ namespace vCardPlatform.Controllers
                 while (reader.Read())
                 {
                     pedidoAInserir = new Conta();
-                    pedidoAInserir.Id = (int)reader["Id"];
+                    pedidoAInserir.Id = (string)reader["Id"];
                     pedidoAInserir.Balance = (float)reader["Balance"];
                     pedidoAInserir.AccountOwner = (string)reader["AccountOwner"];
                     pedidoAInserir.CreatedAt = (string)reader["CreatedAt"];
                     pedidoAInserir.Email = (string)reader["Email"];
-                    pedidoAInserir.PhoneNumber = (int)reader["PhoneNumber"];
                     pedidoAInserir.ConfirmationCode = (int)reader["ConfirmationCode"];
 
                 }
@@ -87,12 +86,11 @@ namespace vCardPlatform.Controllers
                 while (reader.Read())
                 {
                     Conta pedidoAInserir = new Conta();
-                    pedidoAInserir.Id = (int)reader["Id"];
+                    pedidoAInserir.Id = (string)reader["Id"];
                     pedidoAInserir.Balance = (float)reader["Balance"];
                     pedidoAInserir.AccountOwner = (string)reader["AccountOwner"];
                     pedidoAInserir.CreatedAt = (string)reader["CreatedAt"];
                     pedidoAInserir.Email = (string)reader["Email"];
-                    pedidoAInserir.PhoneNumber = (int)reader["PhoneNumber"];
                     pedidoAInserir.ConfirmationCode = (int)reader["ConfirmationCode"];
                     contas.AddLast(pedidoAInserir);
                 }
@@ -126,9 +124,9 @@ namespace vCardPlatform.Controllers
         {
             SqlConnection connection = null;
 
-            string cmdSQL = "SELECT COUNT(*) FROM contas";
-            SqlCommand command = new SqlCommand(cmdSQL, connection);
-            int reader = (int)command.ExecuteScalar();
+            string cmdSQL = null;
+            SqlCommand command = null;
+            
 
 
             try
@@ -138,13 +136,12 @@ namespace vCardPlatform.Controllers
                 connection.Open();
                 cmdSQL = "INSERT INTO Contas VALUES (@z,@a,@b,@c,@d,@e,@f)";
                 command = new SqlCommand(cmdSQL, connection);
-                command.Parameters.AddWithValue("@z", reader);
+                command.Parameters.AddWithValue("@z", DateTime.Now.Ticks +"");
                 command.Parameters.AddWithValue("@a", value.AccountOwner);
                 command.Parameters.AddWithValue("@b", value.Balance);
-                command.Parameters.AddWithValue("@c", DateTime.Now.Ticks + "");
+                command.Parameters.AddWithValue("@c", DateTime.Now.ToString());
                 command.Parameters.AddWithValue("@d", value.Email);
                 command.Parameters.AddWithValue("@e", value.ConfirmationCode);
-                command.Parameters.AddWithValue("@f", value.PhoneNumber);
 
                 int numRows = command.ExecuteNonQuery();
 
@@ -173,7 +170,7 @@ namespace vCardPlatform.Controllers
 
         [Route("{id}")]
         [HttpDelete]
-        public IHttpActionResult DeleteConta(int id)
+        public IHttpActionResult DeleteConta(string id)
         {
             SqlConnection connection = null;
 
@@ -210,7 +207,7 @@ namespace vCardPlatform.Controllers
 
         [Route("{id}")]
         [HttpPut]
-        public IHttpActionResult PutConta(int id, [FromBody] Conta value)
+        public IHttpActionResult PutConta(string id, [FromBody] Conta value)
         {
             SqlConnection connection = null;
 
@@ -229,12 +226,11 @@ namespace vCardPlatform.Controllers
                 while (reader.Read())
                 {
                     contaOld = new Conta();
-                    contaOld.Id = (int)reader["Id"];
+                    contaOld.Id = (string)reader["Id"];
                     contaOld.Balance = (float)reader["Balance"];
                     contaOld.AccountOwner = (string)reader["AccountOwner"];
                     contaOld.CreatedAt = (string)reader["CreatedAt"];
                     contaOld.Email = (string)reader["Email"];
-                    contaOld.PhoneNumber = (int)reader["PhoneNumber"];
                     contaOld.ConfirmationCode = (int)reader["ConfirmationCode"];
 
                 }
@@ -272,14 +268,7 @@ namespace vCardPlatform.Controllers
                     command.Parameters.AddWithValue("@ConfirmationCode", contaOld.ConfirmationCode);
                 }
 
-                if ( value.PhoneNumber > 100000000 && value.PhoneNumber <= 999999999)
-                {
-                    command.Parameters.AddWithValue("@PhoneNumber", value.PhoneNumber);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@PhoneNumber", contaOld.PhoneNumber);
-                }
+                
 
                 command.Parameters.AddWithValue("@id", id);
 

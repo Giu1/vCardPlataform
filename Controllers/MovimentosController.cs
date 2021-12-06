@@ -32,11 +32,12 @@ namespace vCardPlatform.Controllers
                 command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@z", reader);
                 command.Parameters.AddWithValue("@a", movimento.IdSender);
-                command.Parameters.AddWithValue("@b", movimento.IdBankSender);
+                command.Parameters.AddWithValue("@b", movimento.BankRefSender);
                 command.Parameters.AddWithValue("@c", movimento.IdReceiver);
-                command.Parameters.AddWithValue("@d", movimento.IdBankReceiver);
+                command.Parameters.AddWithValue("@d", movimento.BankRefReceiver);
                 command.Parameters.AddWithValue("@e", movimento.Amount);
-                command.Parameters.AddWithValue("@f", movimento.Description);
+                command.Parameters.Add(new SqlParameter("@f", string.IsNullOrEmpty(movimento.Description) ? (object)DBNull.Value : movimento.Description));
+                
                 command.Parameters.AddWithValue("@g", DateTime.Now.Ticks +"");
 
                 int numRows = command.ExecuteNonQuery();
@@ -81,11 +82,11 @@ namespace vCardPlatform.Controllers
                 while (reader.Read())
                 {
                     pedidoAInserir = new MovimentoBancario();
-                    pedidoAInserir.Id = (int)reader["Id"];
+                    pedidoAInserir.Id = (string)reader["Id"];
                     pedidoAInserir.IdSender = (string)reader["Id_Sender"];
-                    pedidoAInserir.IdBankSender = (string)reader["Id_Bank_Sender"];
+                    pedidoAInserir.BankRefSender = (string)reader["Id_Bank_Sender"];
                     pedidoAInserir.IdReceiver = (string)reader["Id_Receiver"];
-                    pedidoAInserir.IdBankReceiver = (string)reader["Id_Bank_Receiver"];
+                    pedidoAInserir.BankRefReceiver = (string)reader["Id_Bank_Receiver"];
                     pedidoAInserir.Amount = (float)reader["Amount"];
                     pedidoAInserir.Date = (string)reader["Date"];
                     pedidoAInserir.Description = (string)reader["Description"];

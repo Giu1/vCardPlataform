@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using vCardPlatformAPI.Models;
 //using vCardPlatformAPI.Models;
 
 namespace ClientApp
@@ -63,7 +64,7 @@ namespace ClientApp
 
 
             //String password = Hash_SHA256(this.textBox2.Text);
-            User obj = null;
+            Conta obj = null;
 
             try
             {
@@ -84,7 +85,7 @@ namespace ClientApp
 
                 var serializer = new JavaScriptSerializer();
 
-                obj = (User)serializer.Deserialize(strResul, typeof(User));
+                obj = (Conta)serializer.Deserialize(strResul, typeof(Conta));
 
             }
             catch (Exception ex)

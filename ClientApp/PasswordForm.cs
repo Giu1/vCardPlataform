@@ -14,8 +14,8 @@ namespace ClientApp
 {
     public partial class PasswordForm : Form
     {
-        private User user;
-        public PasswordForm(User AuthUser)
+        private Conta user;
+        public PasswordForm(Conta AuthUser)
         {
             InitializeComponent();
             this.user = AuthUser;
