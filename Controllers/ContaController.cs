@@ -238,7 +238,7 @@ namespace vCardPlatform.Controllers
                 reader.Close();
                 
                 // comparo com o elemento enviado pelo request
-                cmdSQL = "UPDATE Contas set AccountOwner=@AccountOwner,Email=@Email,ConfirmationCode=@ConfirmationCode,PhoneNumber=@PhoneNumber WHERE id =@id";
+                cmdSQL = "UPDATE Contas set AccountOwner=@AccountOwner,Email=@Email,Balance=@balance,ConfirmationCode=@ConfirmationCode WHERE id =@id";
                 command = new SqlCommand(cmdSQL, connection);
                 
                 if (value.AccountOwner != null)
@@ -248,6 +248,15 @@ namespace vCardPlatform.Controllers
                 else
                 {
                     command.Parameters.AddWithValue("@AccountOwner", contaOld.AccountOwner);
+                }
+
+                if (value.Balance != 0)
+                {
+                    command.Parameters.AddWithValue("@balance", value.Balance);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@balance", contaOld.Balance);
                 }
 
                 if (value.Email != null && IsValidEmail(value.Email))
@@ -268,7 +277,9 @@ namespace vCardPlatform.Controllers
                     command.Parameters.AddWithValue("@ConfirmationCode", contaOld.ConfirmationCode);
                 }
 
-                
+               
+
+
 
                 command.Parameters.AddWithValue("@id", id);
 

@@ -15,6 +15,6 @@ namespace vCardPlatform.Models
 
         public int ConfirmationCode { get; set; }
 
-        public string BankReference { get; set; }
+        
     }
 }

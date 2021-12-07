@@ -6,7 +6,7 @@ using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using vCardPlatformAPI.Models;
-//using vCardPlatformAPI.Models;
+
 
 namespace ClientApp
 {

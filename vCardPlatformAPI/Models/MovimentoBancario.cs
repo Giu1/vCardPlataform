@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Xml;
 
-namespace vCardPlatform.Models
+namespace vCardPlatformAPI.Models
 {
     public class MovimentoBancario
     {

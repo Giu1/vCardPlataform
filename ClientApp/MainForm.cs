@@ -100,5 +100,18 @@ namespace ClientApp
             ReloadUser();
             LoadElements();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Depositar f2 = new Depositar(AuthUser);
+            if (f2.ShowDialog() != DialogResult.OK)
+            {
+                // The user canceled.
+                this.Close();
+            }
+
+            ReloadUser();
+            LoadElements();
+        }
     }
 }

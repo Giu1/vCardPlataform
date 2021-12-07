@@ -111,6 +111,7 @@ namespace ClientApp
             this.button3.TabIndex = 6;
             this.button3.Text = "Carregar Cartão";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label3
             // 

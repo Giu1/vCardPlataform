@@ -16,8 +16,8 @@ namespace vCardPlatformAPI.Models
 
         public string Password { get; set; }
         public string Photo { get; set; } 
-        public string bankReferenceID { get; set; }
-        public string bankReference { get; set; }
+        public string BankId { get; set; }
+        public string BankRef { get; set; }
 
     }
 }

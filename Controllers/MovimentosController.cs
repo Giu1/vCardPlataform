@@ -23,22 +23,30 @@ namespace vCardPlatform.Controllers
             connection.Open();
             string cmdSQL = "SELECT COUNT(*) FROM movimentos";
             SqlCommand command = new SqlCommand(cmdSQL, connection);
-            int reader = (int)command.ExecuteScalar();
+            
 
             try
             {
     
                 cmdSQL = "INSERT INTO Movimentos VALUES (@z,@a,@b,@c,@d,@e,@f,@g)";
                 command = new SqlCommand(cmdSQL, connection);
-                command.Parameters.AddWithValue("@z", reader);
+                command.Parameters.AddWithValue("@z", DateTime.Now.Ticks+"");
                 command.Parameters.AddWithValue("@a", movimento.IdSender);
                 command.Parameters.AddWithValue("@b", movimento.BankRefSender);
                 command.Parameters.AddWithValue("@c", movimento.IdReceiver);
                 command.Parameters.AddWithValue("@d", movimento.BankRefReceiver);
-                command.Parameters.AddWithValue("@e", movimento.Amount);
+
+                if (movimento.Amount >0 )
+                {
+                    command.Parameters.AddWithValue("@e", movimento.Amount);
+                }
+                else
+                {
+                    return NotFound();
+                }
                 command.Parameters.Add(new SqlParameter("@f", string.IsNullOrEmpty(movimento.Description) ? (object)DBNull.Value : movimento.Description));
                 
-                command.Parameters.AddWithValue("@g", DateTime.Now.Ticks +"");
+                command.Parameters.AddWithValue("@g", DateTime.Now.ToString());
 
                 int numRows = command.ExecuteNonQuery();
 

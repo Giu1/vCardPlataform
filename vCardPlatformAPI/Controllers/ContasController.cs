@@ -43,6 +43,8 @@ namespace vCardPlatformApi.Controllers
                     pedidoAInserir.Email = (string)reader["Email"];
                     pedidoAInserir.ConfirmationCode = (int)reader["ConfirmationCode"];
                     pedidoAInserir.Password = (string)reader["Password"];
+                    pedidoAInserir.BankId = (string)reader["BankId"];
+                    pedidoAInserir.BankRef = (string)reader["BankReference"];
                     if (reader["Photo"] != DBNull.Value)
                     {
                         byte[] data = (byte[])reader["Photo"];
@@ -143,6 +145,7 @@ namespace vCardPlatformApi.Controllers
                     oldUser.Email = (string)reader["Email"];
                     oldUser.ConfirmationCode = (int)reader["ConfirmationCode"];
                     oldUser.Password = (string)reader["Password"];
+                    oldUser.Balance = (float)reader["Balance"];
                     if (reader["Photo"] != DBNull.Value)
                     {
                         oldUser.Photo = Convert.ToBase64String((Byte[])reader["Photo"]);
@@ -188,19 +191,28 @@ namespace vCardPlatformApi.Controllers
 
                 if (user.Photo != null)
                 {
-                    string cmdSQL = "UPDATE Contas set AccountOwner=@accountowner,ConfirmationCode=@confirmationcode,Password=@password,Email=@email,Photo =@photo WHERE PhoneNumber =@id";
+                    string cmdSQL = "UPDATE Contas set AccountOwner=@accountowner,ConfirmationCode=@confirmationcode,Password=@password,Balance=@balance,Email=@email,Photo =@photo WHERE PhoneNumber =@id";
                     command = new SqlCommand(cmdSQL, connection);
                     command.Parameters.AddWithValue("@photo", Convert.FromBase64String(user.Photo));
 
                 }
                 else
                 {
-                    string cmdSQL = "UPDATE Contas set AccountOwner=@accountowner,ConfirmationCode=@confirmationcode,Password=@password,Email=@email WHERE PhoneNumber =@id";
+                    string cmdSQL = "UPDATE Contas set AccountOwner=@accountowner,ConfirmationCode=@confirmationcode,Balance=@balance,Password=@password,Email=@email WHERE PhoneNumber =@id";
                     command = new SqlCommand(cmdSQL, connection);
                 }
 
                 
                 command.Parameters.AddWithValue("@id", id);
+
+                if (user.Balance != 0)
+                {
+                    command.Parameters.AddWithValue("@balance", user.Balance);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@balance", oldUser.Balance);
+                }
 
                 if (user.AccountOwner != null)
                 {
@@ -303,6 +315,12 @@ namespace vCardPlatformApi.Controllers
                 command.Parameters.AddWithValue("@confirmationcode", user.ConfirmationCode);
                 command.Parameters.AddWithValue("@password", user.Password);
                 command.Parameters.AddWithValue("@email", user.Email);
+
+                //todo
+                /*
+                 * pedidoAInserir.BankId = (string)reader["BankId"];
+                    pedidoAInserir.BankRef = (string)reader["BankReference"];
+                 */
 
                 int numRows = command.ExecuteNonQuery();
 

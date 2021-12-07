@@ -10,7 +10,6 @@ using System.Text;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using vCardPlatform.Models;
 using vCardPlatformAPI.Models;
 
 namespace vCardPlatformAPI.Controllers
