@@ -112,14 +112,14 @@ namespace vCardPlatformApi.Controllers
 
 
 
-            
+
 
             return Ok();
         }
 
         [Route("{id}")]
         [HttpPut]
-        public IHttpActionResult Put([FromBody] Conta user,int id)
+        public IHttpActionResult Put([FromBody] Conta user, int id)
         {
             //gets the user in BD
 
@@ -136,7 +136,7 @@ namespace vCardPlatformApi.Controllers
                 command.Parameters.AddWithValue("@idPedidosTable", id);
                 reader = command.ExecuteReader();
 
-                
+
 
                 while (reader.Read())
                 {
@@ -164,7 +164,7 @@ namespace vCardPlatformApi.Controllers
                 {
                     return NotFound();
                 }
-               
+
             }
             catch (Exception e)
             {
@@ -186,7 +186,7 @@ namespace vCardPlatformApi.Controllers
                 connection = new SqlConnection(connectionString);
                 connection.Open();
 
-                
+
 
 
                 if (user.Photo != null)
@@ -202,7 +202,7 @@ namespace vCardPlatformApi.Controllers
                     command = new SqlCommand(cmdSQL, connection);
                 }
 
-                
+
                 command.Parameters.AddWithValue("@id", id);
 
                 if (user.Balance != 0)
@@ -223,9 +223,9 @@ namespace vCardPlatformApi.Controllers
                     command.Parameters.AddWithValue("@accountowner", oldUser.AccountOwner);
                 }
 
-                if ( user.ConfirmationCode!=0)
+                if (user.ConfirmationCode != 0)
                 {
-                    if (user.ConfirmationCode>=1000 && user.ConfirmationCode<=9999)
+                    if (user.ConfirmationCode >= 1000 && user.ConfirmationCode <= 9999)
                     {
                         command.Parameters.AddWithValue("@confirmationcode", user.ConfirmationCode);
                     }
@@ -240,9 +240,9 @@ namespace vCardPlatformApi.Controllers
                     command.Parameters.AddWithValue("@confirmationcode", oldUser.ConfirmationCode);
                 }
 
-                
 
-                if (user.Password!=null)
+
+                if (user.Password != null)
                 {
                     command.Parameters.AddWithValue("@password", user.Password);
                 }
@@ -251,7 +251,7 @@ namespace vCardPlatformApi.Controllers
                     command.Parameters.AddWithValue("@password", oldUser.Password);
                 }
 
-                if (user.Email!=null)
+                if (user.Email != null)
                 {
                     command.Parameters.AddWithValue("@email", user.Email);
                 }
@@ -259,7 +259,7 @@ namespace vCardPlatformApi.Controllers
                 {
                     command.Parameters.AddWithValue("@email", oldUser.Email);
                 }
-                       
+
 
                 int numRows = command.ExecuteNonQuery();
 
@@ -289,7 +289,7 @@ namespace vCardPlatformApi.Controllers
         {
             SqlConnection connection = null;
             SqlCommand command = null;
-            
+
 
             connection = null;
             try
@@ -299,13 +299,14 @@ namespace vCardPlatformApi.Controllers
 
                 if (user.Photo != null)
                 {
-                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,@photo,@password)";
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,@photo,@password,NULL,NULL)";
                     command = new SqlCommand(cmdSQL, connection);
                     command.Parameters.AddWithValue("@photo", Convert.FromBase64String(user.Photo));
                 }
                 else
                 {
-                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,NULL,@password)";
+                    //falta os 2 ultimos parametros
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,NULL,@password,NULL,NULL)";
                     command = new SqlCommand(cmdSQL, connection);
                 }
 
@@ -343,6 +344,105 @@ namespace vCardPlatformApi.Controllers
                 return Ok(e.Message + e.StackTrace);
             }
 
+        }
+
+
+        [Route("{id:int}")]
+        [HttpDelete]
+        public IHttpActionResult Delete(int id)
+        {
+            //gets the user in BD
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            SqlDataReader reader = null;
+            Conta UserRemove = null;
+            
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Contas WHERE PhoneNumber=@idPedidosTable";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", id);
+                reader = command.ExecuteReader();
+
+
+
+                while (reader.Read())
+                {
+                    UserRemove = new Conta();
+                    UserRemove.AccountOwner = (string)reader["AccountOwner"];
+                    UserRemove.Email = (string)reader["Email"];
+                    UserRemove.ConfirmationCode = (int)reader["ConfirmationCode"];
+                    UserRemove.Password = (string)reader["Password"];
+                    UserRemove.Balance = (float)reader["Balance"];
+                    if (reader["Photo"] != DBNull.Value)
+                    {
+                        UserRemove.Photo = Convert.ToBase64String((Byte[])reader["Photo"]);
+                    }
+                    else
+                    {
+                        UserRemove.Photo = null;
+                    }
+
+
+                }
+
+                reader.Close();
+                connection.Close();
+                if (UserRemove == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+            if (UserRemove.Balance != 0)
+            {
+                return BadRequest("Account balance must be 0 to delete");
+            }
+
+            //inserts full client
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                string cmdSQL = "DELETE FROM Contas WHERE PhoneNumber=@id";
+                command = new SqlCommand(cmdSQL, connection);
+
+                command.Parameters.AddWithValue("@id", id);
+
+                int numRows = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (numRows > 0)
+                {
+                    return Ok();
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
         }
     }
 }
