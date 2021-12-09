@@ -56,6 +56,12 @@
     <Compile Include="Depositar.Designer.cs">
       <DependentUpon>Depositar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Levantar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Levantar.Designer.cs">
+      <DependentUpon>Levantar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pagamento.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +96,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Depositar.resx">
       <DependentUpon>Depositar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Levantar.resx">
+      <DependentUpon>Levantar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

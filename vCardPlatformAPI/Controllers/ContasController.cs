@@ -31,11 +31,11 @@ namespace vCardPlatformApi.Controllers
                 command.Parameters.AddWithValue("@idPedidosTable", id);
                 SqlDataReader reader = command.ExecuteReader();
 
-                Conta pedidoAInserir = null;
+                User pedidoAInserir = null;
 
                 while (reader.Read())
                 {
-                    pedidoAInserir = new Conta();
+                    pedidoAInserir = new User();
                     pedidoAInserir.Id = (int)reader["PhoneNumber"];
                     pedidoAInserir.Balance = (float)reader["Balance"];
                     pedidoAInserir.AccountOwner = (string)reader["AccountOwner"];
@@ -84,11 +84,6 @@ namespace vCardPlatformApi.Controllers
 
 
 
-
-
-
-
-
         [Route("banks/{id}")]
         [HttpGet]
         public IHttpActionResult Index()
@@ -110,23 +105,19 @@ namespace vCardPlatformApi.Controllers
                 reader.Close();
             }
 
-
-
-            
-
             return Ok();
         }
 
         [Route("{id}")]
         [HttpPut]
-        public IHttpActionResult Put([FromBody] Conta user,int id)
+        public IHttpActionResult Put([FromBody] User user,int id)
         {
             //gets the user in BD
 
             SqlConnection connection = null;
             SqlCommand command = null;
             SqlDataReader reader = null;
-            Conta oldUser = null;
+            User oldUser = null;
             try
             {
                 connection = new SqlConnection(connectionString);
@@ -140,7 +131,7 @@ namespace vCardPlatformApi.Controllers
 
                 while (reader.Read())
                 {
-                    oldUser = new Conta();
+                    oldUser = new User();
                     oldUser.AccountOwner = (string)reader["AccountOwner"];
                     oldUser.Email = (string)reader["Email"];
                     oldUser.ConfirmationCode = (int)reader["ConfirmationCode"];
@@ -285,7 +276,7 @@ namespace vCardPlatformApi.Controllers
 
         [Route("")]
         [HttpPost]
-        public IHttpActionResult Post(Conta user)
+        public IHttpActionResult Post(User user)
         {
             SqlConnection connection = null;
             SqlCommand command = null;

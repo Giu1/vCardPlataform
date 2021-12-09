@@ -10,14 +10,15 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using vCardPlatform.Models;
 using vCardPlatformAPI.Models;
 
 namespace ClientApp
 {
     public partial class Pagamento : Form
     {
-        private Conta conta;
-        public Pagamento(Conta conta)
+        private User conta;
+        public Pagamento(User conta)
         {
             InitializeComponent();
             this.conta = conta;
@@ -66,7 +67,7 @@ namespace ClientApp
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Utilizador não encontrado.");
+                MessageBox.Show("Utilizador não encontrado." + ex.Message + "\n" + ex.StackTrace);
 
                 return;
             }
