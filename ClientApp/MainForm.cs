@@ -17,8 +17,8 @@ namespace ClientApp
     public partial class MainForm : Form
     {
 
-        private static Conta AuthUser { get; set; }
-        public MainForm(Conta user)
+        private static User AuthUser { get; set; }
+        public MainForm(User user)
         {
             InitializeComponent();
             AuthUser = user;
@@ -80,7 +80,7 @@ namespace ClientApp
 
             var serializer = new JavaScriptSerializer();
 
-            AuthUser = (Conta)serializer.Deserialize(strResul, typeof(Conta));
+            AuthUser = (User)serializer.Deserialize(strResul, typeof(User));
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -104,6 +104,19 @@ namespace ClientApp
         private void button3_Click(object sender, EventArgs e)
         {
             Depositar f2 = new Depositar(AuthUser);
+            if (f2.ShowDialog() != DialogResult.OK)
+            {
+                // The user canceled.
+                this.Close();
+            }
+
+            ReloadUser();
+            LoadElements();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Levantar f2 = new Levantar(AuthUser);
             if (f2.ShowDialog() != DialogResult.OK)
             {
                 // The user canceled.

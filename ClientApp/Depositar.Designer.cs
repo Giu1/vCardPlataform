@@ -84,7 +84,7 @@ namespace ClientApp
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Depositar";
-            this.Text = "Form1";
+            this.Text = "Depositar dinheiro";
             this.Load += new System.EventHandler(this.Depositar_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
