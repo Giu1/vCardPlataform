@@ -31,3 +31,6 @@ vCardPlatformAPI/obj/Debug/
 vCardPlatformAPI/Web.config
 Web.config
 .vs/vCardPlatform/v17/.futdcache.v1
+vCardPlatformAPI/App_Data/MainDatabase_log.ldf
+vCardPlatformAPI/App_Data/MainDatabase.mdf
+vCardPlatformAPI/App_Data/MainDatabase.mdf
