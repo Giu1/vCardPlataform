@@ -1,14 +1,16 @@
-﻿namespace Admin_Console
+﻿using System.Windows.Forms;
+
+namespace AdminConsole
 {
-    partial class AdminConsole
+    partial class Admin_Console
     {
         /// <summary>
-        ///  Required designer variable.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        ///  Clean up any resources being used.
+        /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
@@ -23,8 +25,8 @@
         #region Windows Form Designer generated code
 
         /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -47,7 +49,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
@@ -65,50 +66,48 @@
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(702, 430);
+            this.button17.Location = new System.Drawing.Point(617, 393);
             this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(92, 24);
-            this.button17.TabIndex = 65;
+            this.button17.Size = new System.Drawing.Size(79, 21);
+            this.button17.TabIndex = 98;
             this.button17.Text = "Exit";
             this.button17.UseVisualStyleBackColor = true;
             this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(84, 430);
+            this.button16.Location = new System.Drawing.Point(87, 393);
             this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(92, 24);
-            this.button16.TabIndex = 64;
+            this.button16.Size = new System.Drawing.Size(79, 21);
+            this.button16.TabIndex = 97;
             this.button16.Text = "Logout";
             this.button16.UseVisualStyleBackColor = true;
             this.button16.Click += new System.EventHandler(this.button16_Click);
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(455, 430);
+            this.button15.Location = new System.Drawing.Point(405, 393);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(105, 24);
-            this.button15.TabIndex = 63;
+            this.button15.Size = new System.Drawing.Size(90, 21);
+            this.button15.TabIndex = 96;
             this.button15.Text = "Export to Excel";
             this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(330, 430);
+            this.button14.Location = new System.Drawing.Point(298, 393);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(92, 24);
-            this.button14.TabIndex = 62;
+            this.button14.Size = new System.Drawing.Size(79, 21);
+            this.button14.TabIndex = 95;
             this.button14.Text = "Export to Xml";
             this.button14.UseVisualStyleBackColor = true;
-            this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(399, 400);
+            this.button13.Location = new System.Drawing.Point(357, 359);
             this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(84, 24);
-            this.button13.TabIndex = 61;
+            this.button13.Size = new System.Drawing.Size(72, 21);
+            this.button13.TabIndex = 94;
             this.button13.Text = "Search";
             this.button13.UseVisualStyleBackColor = true;
             this.button13.Click += new System.EventHandler(this.button13_Click);
@@ -116,47 +115,43 @@
             // comboBoxParametros
             // 
             this.comboBoxParametros.FormattingEnabled = true;
-            this.comboBoxParametros.Location = new System.Drawing.Point(455, 362);
+            this.comboBoxParametros.Location = new System.Drawing.Point(405, 334);
             this.comboBoxParametros.Name = "comboBoxParametros";
-            this.comboBoxParametros.Size = new System.Drawing.Size(121, 23);
-            this.comboBoxParametros.TabIndex = 60;
-            this.comboBoxParametros.SelectedIndexChanged += new System.EventHandler(this.comboBoxParametros_SelectedIndexChanged);
+            this.comboBoxParametros.Size = new System.Drawing.Size(104, 21);
+            this.comboBoxParametros.TabIndex = 93;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(341, 366);
+            this.label10.Location = new System.Drawing.Point(308, 337);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(72, 15);
-            this.label10.TabIndex = 59;
+            this.label10.Size = new System.Drawing.Size(66, 13);
+            this.label10.TabIndex = 92;
             this.label10.Text = "Parameters :";
-            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // comboBoxFiltro
             // 
             this.comboBoxFiltro.FormattingEnabled = true;
-            this.comboBoxFiltro.Location = new System.Drawing.Point(455, 325);
+            this.comboBoxFiltro.Location = new System.Drawing.Point(405, 302);
             this.comboBoxFiltro.Name = "comboBoxFiltro";
-            this.comboBoxFiltro.Size = new System.Drawing.Size(121, 23);
-            this.comboBoxFiltro.TabIndex = 58;
-            this.comboBoxFiltro.SelectedIndexChanged += new System.EventHandler(this.comboBoxFiltro_SelectedIndexChanged);
+            this.comboBoxFiltro.Size = new System.Drawing.Size(104, 21);
+            this.comboBoxFiltro.TabIndex = 91;
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(321, 324);
+            this.button12.Location = new System.Drawing.Point(291, 301);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(112, 24);
-            this.button12.TabIndex = 57;
+            this.button12.Size = new System.Drawing.Size(96, 21);
+            this.button12.TabIndex = 90;
             this.button12.Text = "Select Filter Type";
             this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(399, 287);
+            this.button11.Location = new System.Drawing.Point(357, 269);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(84, 24);
-            this.button11.TabIndex = 56;
+            this.button11.Size = new System.Drawing.Size(72, 21);
+            this.button11.TabIndex = 89;
             this.button11.Text = "Show All";
             this.button11.UseVisualStyleBackColor = true;
             this.button11.Click += new System.EventHandler(this.button11_Click);
@@ -164,30 +159,28 @@
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.ItemHeight = 15;
-            this.listBox2.Location = new System.Drawing.Point(330, 124);
+            this.listBox2.Location = new System.Drawing.Point(298, 127);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(230, 154);
-            this.listBox2.TabIndex = 55;
+            this.listBox2.Size = new System.Drawing.Size(198, 134);
+            this.listBox2.TabIndex = 88;
             this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label9.Location = new System.Drawing.Point(355, 89);
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 18F);
+            this.label9.Location = new System.Drawing.Point(320, 97);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(177, 32);
-            this.label9.TabIndex = 54;
+            this.label9.TabIndex = 87;
             this.label9.Text = "Operation Logs";
-            this.label9.Click += new System.EventHandler(this.label9_Click);
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(99, 361);
+            this.button10.Location = new System.Drawing.Point(100, 333);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(121, 24);
-            this.button10.TabIndex = 53;
+            this.button10.Size = new System.Drawing.Size(104, 21);
+            this.button10.TabIndex = 86;
             this.button10.Text = "Set New Values";
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
@@ -195,105 +188,90 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(108, 275);
+            this.label8.Location = new System.Drawing.Point(108, 258);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(103, 15);
-            this.label8.TabIndex = 52;
+            this.label8.Size = new System.Drawing.Size(98, 13);
+            this.label8.TabIndex = 85;
             this.label8.Text = "Transaction Values";
-            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(172, 329);
+            this.textBox2.Location = new System.Drawing.Point(163, 305);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(112, 23);
-            this.textBox2.TabIndex = 51;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBox2.Size = new System.Drawing.Size(97, 20);
+            this.textBox2.TabIndex = 84;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(172, 302);
+            this.textBox1.Location = new System.Drawing.Point(163, 282);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(112, 23);
-            this.textBox1.TabIndex = 50;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.Size = new System.Drawing.Size(97, 20);
+            this.textBox1.TabIndex = 83;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(71, 332);
+            this.label7.Location = new System.Drawing.Point(76, 308);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(95, 15);
-            this.label7.TabIndex = 49;
+            this.label7.Size = new System.Drawing.Size(83, 13);
+            this.label7.TabIndex = 82;
             this.label7.Text = "Debito Maximo :";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(67, 305);
+            this.label6.Location = new System.Drawing.Point(73, 284);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(99, 15);
-            this.label6.TabIndex = 48;
+            this.label6.Size = new System.Drawing.Size(85, 13);
+            this.label6.TabIndex = 81;
             this.label6.Text = "Credito Maximo :";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(665, 347);
+            this.button9.Location = new System.Drawing.Point(585, 297);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(129, 38);
-            this.button9.TabIndex = 47;
+            this.button9.Size = new System.Drawing.Size(111, 33);
+            this.button9.TabIndex = 80;
             this.button9.Text = "Disable/Enable Account";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(665, 287);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(129, 24);
-            this.button8.TabIndex = 46;
-            this.button8.Text = "Change Password";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(665, 257);
+            this.button7.Location = new System.Drawing.Point(585, 269);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(129, 24);
-            this.button7.TabIndex = 45;
+            this.button7.Size = new System.Drawing.Size(111, 21);
+            this.button7.TabIndex = 78;
             this.button7.Text = "Create Account";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(665, 164);
+            this.button6.Location = new System.Drawing.Point(585, 162);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(129, 24);
-            this.button6.TabIndex = 44;
+            this.button6.Size = new System.Drawing.Size(111, 21);
+            this.button6.TabIndex = 77;
             this.button6.Text = "Change Email";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(665, 134);
+            this.button5.Location = new System.Drawing.Point(585, 136);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(129, 24);
-            this.button5.TabIndex = 43;
+            this.button5.Size = new System.Drawing.Size(111, 21);
+            this.button5.TabIndex = 76;
             this.button5.Text = "Change Name";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(665, 197);
+            this.button4.Location = new System.Drawing.Point(585, 191);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(129, 24);
-            this.button4.TabIndex = 42;
+            this.button4.Size = new System.Drawing.Size(111, 21);
+            this.button4.TabIndex = 75;
             this.button4.Text = "Change Password";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
@@ -301,50 +279,48 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label5.Location = new System.Drawing.Point(638, 89);
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 18F);
+            this.label5.Location = new System.Drawing.Point(562, 97);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(187, 32);
-            this.label5.TabIndex = 41;
+            this.label5.TabIndex = 74;
             this.label5.Text = "Account Control";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(127, 215);
+            this.label4.Location = new System.Drawing.Point(124, 206);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 15);
-            this.label4.TabIndex = 40;
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 73;
             this.label4.Text = "pingcheck";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(665, 317);
+            this.button3.Location = new System.Drawing.Point(585, 243);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(129, 24);
-            this.button3.TabIndex = 39;
+            this.button3.Size = new System.Drawing.Size(111, 21);
+            this.button3.TabIndex = 72;
             this.button3.Text = "Delete Account";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(665, 227);
+            this.button2.Location = new System.Drawing.Point(585, 217);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(129, 24);
-            this.button2.TabIndex = 38;
+            this.button2.Size = new System.Drawing.Size(111, 21);
+            this.button2.TabIndex = 71;
             this.button2.Text = "Change Account";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(99, 233);
+            this.button1.Location = new System.Drawing.Point(100, 222);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 24);
-            this.button1.TabIndex = 37;
+            this.button1.Size = new System.Drawing.Size(104, 21);
+            this.button1.TabIndex = 70;
             this.button1.Text = "Check Connectivity";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -352,50 +328,46 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(99, 134);
+            this.listBox1.Location = new System.Drawing.Point(100, 136);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(121, 64);
-            this.listBox1.TabIndex = 36;
+            this.listBox1.Size = new System.Drawing.Size(104, 56);
+            this.listBox1.TabIndex = 69;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(393, 65);
+            this.label3.Location = new System.Drawing.Point(352, 76);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 15);
-            this.label3.TabIndex = 35;
+            this.label3.Size = new System.Drawing.Size(79, 13);
+            this.label3.TabIndex = 68;
             this.label3.Text = "Welcome ******";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 31F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(227, -3);
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 31F);
+            this.label2.Location = new System.Drawing.Point(210, 17);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(441, 57);
-            this.label2.TabIndex = 34;
+            this.label2.TabIndex = 67;
             this.label2.Text = "Administrator Console";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(84, 89);
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 18F);
+            this.label1.Location = new System.Drawing.Point(87, 97);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(167, 32);
-            this.label1.TabIndex = 33;
+            this.label1.TabIndex = 66;
             this.label1.Text = "Banks & Entities";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // AdminConsole
+            // Admin_Console
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(893, 495);
+            this.ClientSize = new System.Drawing.Size(796, 461);
             this.Controls.Add(this.button17);
             this.Controls.Add(this.button16);
             this.Controls.Add(this.button15);
@@ -415,7 +387,6 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.button9);
-            this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -429,8 +400,9 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "AdminConsole";
-            this.Text = "Form1";
+            this.Name = "Admin_Console";
+            this.Text = "Form2";
+            this.Load += new System.EventHandler(this.AdminConsole_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -457,7 +429,6 @@
         private Label label7;
         private Label label6;
         private Button button9;
-        private Button button8;
         private Button button7;
         private Button button6;
         private Button button5;

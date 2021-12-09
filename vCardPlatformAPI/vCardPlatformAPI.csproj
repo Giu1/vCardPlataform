@@ -86,15 +86,20 @@
       <DependentUpon>MainDatabase.mdf</DependentUpon>
     </Content>
     <Content Include="Global.asax" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminImportartanteController.cs" />
     <Compile Include="Controllers\ContasController.cs" />
-    <Compile Include="Controllers\ApiMovimentosController.cs" />
+    <Compile Include="Controllers\MovimentosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\AdminAccount.cs" />
+    <Compile Include="Models\MovimentoBancario.cs" />
+    <Compile Include="Models\Conta.cs" />
     <Compile Include="Models\UserBankSide.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -105,18 +110,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\bank1-API.csproj">
-      <Project>{2ffd75b0-669a-4c35-881d-5390dbb1f100}</Project>
-      <Name>bank1-API</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
