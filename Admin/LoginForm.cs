@@ -91,6 +91,7 @@ namespace Admin
                 return;
 
             }
+            Global.CurrentUser = obj;
             Form consola = new Admin_Console();
             consola.Show();
             Form loginhere = this;

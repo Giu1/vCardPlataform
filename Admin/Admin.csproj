@@ -62,6 +62,7 @@
     <Compile Include="ChangeXForm.Designer.cs">
       <DependentUpon>ChangeXForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Global.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

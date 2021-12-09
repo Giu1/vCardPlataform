@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using vCardPlatformAPI.Models;
 
 namespace AdminConsole
 {
@@ -22,6 +22,8 @@ namespace AdminConsole
         String[] FilterTime = { "1 Week", "1 month", "6 months", "1 Year" };
         String[] FilterBalance = { "Most Money", "Least Money" };
         String localhost = "127.0.0.1";
+
+        AdminAccount User = Global.CurrentUser;
 
         //Change String
         public string changeID { get; set; }
@@ -130,7 +132,7 @@ namespace AdminConsole
 
         private void AdminConsole_Load(object sender, EventArgs e)
         {
-
+            label3.Text = User.Nome;
         }
 
         private void button6_Click(object sender, EventArgs e)
