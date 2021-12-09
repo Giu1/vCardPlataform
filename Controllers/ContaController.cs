@@ -250,7 +250,7 @@ namespace vCardPlatform.Controllers
                     command.Parameters.AddWithValue("@AccountOwner", contaOld.AccountOwner);
                 }
 
-                if (value.Balance != 0)
+                if (value.Balance != float.MinValue)
                 {
                     command.Parameters.AddWithValue("@balance", value.Balance);
                 }

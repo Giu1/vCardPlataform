@@ -8,8 +8,13 @@ namespace vCardPlatform.Models
 {
     public class MovimentoBancario
     {
+        public MovimentoBancario()
+        {
+            this.Amount = float.MinValue;
+        }
         public string Id { get; set; }
 
+        public TypeOfMoviment Type { get; set; }
         public string IdSender { get; set; }
         public string BankRefSender { get; set; }
         public string IdReceiver { get; set; }
@@ -21,5 +26,11 @@ namespace vCardPlatform.Models
         public string Date { get; set; }
 
 
+    }
+
+    public enum TypeOfMoviment
+    {
+        Credito,
+        Debito
     }
 }

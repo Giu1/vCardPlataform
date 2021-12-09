@@ -64,7 +64,7 @@ namespace ClientApp
 
 
             //String password = Hash_SHA256(this.textBox2.Text);
-            Conta obj = null;
+            User obj = null;
 
             try
             {
@@ -85,7 +85,7 @@ namespace ClientApp
 
                 var serializer = new JavaScriptSerializer();
 
-                obj = (Conta)serializer.Deserialize(strResul, typeof(Conta));
+                obj = (User)serializer.Deserialize(strResul, typeof(User));
 
             }
             catch (Exception ex)
