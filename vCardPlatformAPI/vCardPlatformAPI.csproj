@@ -90,7 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AdminImportartanteController.cs" />
     <Compile Include="Controllers\ApiMovimentosController.cs" />
     <Compile Include="Controllers\ContasController.cs" />

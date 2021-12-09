@@ -9,7 +9,7 @@ using vCardPlatformAPI.Models;
 
 namespace vCardPlatformAPI.Controllers
 {
-    [RoutePrefix("api/teste")]
+    [RoutePrefix("api/admin")]
     public class AdminImportartanteController : ApiController
     {
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ProductsApp.Properties.Settings.ConnectionToDB"].ConnectionString;
@@ -34,7 +34,7 @@ namespace vCardPlatformAPI.Controllers
                 connection = new SqlConnection(connectionString);
 
                 connection.Open();
-                string cmdSQL = "SELECT * FROM Admin WHERE Email=@Email";
+                string cmdSQL = "SELECT * FROM Admins WHERE Email=@Email";
                 SqlCommand command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@Email", token);
                 SqlDataReader reader = command.ExecuteReader();
