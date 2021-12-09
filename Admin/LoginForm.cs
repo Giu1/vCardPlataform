@@ -29,12 +29,13 @@ namespace Admin
 
             //verificar se existe
 
-            string link = String.Format("http://localhost:50766/api/adminconsole/");
+            string link = String.Format("http://localhost:50766/api/teste/");
 
             try
             {
                 WebRequest request = WebRequest.Create(link);
                 request.Method = "GET";
+                request.Headers.Add("Custom",email);
                 HttpWebResponse response = null;
 
                 response = (HttpWebResponse)request.GetResponse();
@@ -59,7 +60,7 @@ namespace Admin
                 WebRequest requestPassword = WebRequest.Create(link);
                 requestPassword.Method = "GET";
                 HttpWebResponse responsePassword = null;
-
+                requestPassword.Headers.Add("Custom", email);
                 responsePassword = (HttpWebResponse)requestPassword.GetResponse();
 
                 String strResul = null;
@@ -82,8 +83,9 @@ namespace Admin
                 return;
             }
 
-            String password = Hash_SHA256(this.textBox2.Text);
-            if (obj.Password.CompareTo(password) != 0)
+            string password = this.textBox2.Text;//Hash_SHA256(this.textBox2.Text);
+            string pobj = obj.Password.Trim();
+            if (string.Compare(pobj,password)!=0)
             {
                 MessageBox.Show("Password incorreta");
                 return;
