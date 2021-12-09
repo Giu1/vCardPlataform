@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminImportartanteController.cs" />
     <Compile Include="Controllers\ContasController.cs" />
     <Compile Include="Controllers\MovimentosController.cs" />
     <Compile Include="Global.asax.cs">
