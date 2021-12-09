@@ -14,8 +14,8 @@ namespace ClientApp
 {
     public partial class PasswordForm : Form
     {
-        private Conta user;
-        public PasswordForm(Conta AuthUser)
+        private User user;
+        public PasswordForm(User AuthUser)
         {
             InitializeComponent();
             this.user = AuthUser;
@@ -24,7 +24,7 @@ namespace ClientApp
         private void button2_Click(object sender, EventArgs e)
         {
             string password = Hash_SHA256(textBox1.Text);
-            if (Hash_SHA256(textBox1.Text).CompareTo(user.Password)==0)
+            if (Hash_SHA256(textBox1.Text).CompareTo(user.Password) == 0)
             {
                 // The password is ok.
                 this.DialogResult = DialogResult.OK;

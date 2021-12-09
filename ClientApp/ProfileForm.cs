@@ -17,8 +17,8 @@ namespace ClientApp
 {
     public partial class ProfileForm : Form
     {
-        private static Conta AuthUser { get; set; }
-        public ProfileForm(Conta user)
+        private static User AuthUser { get; set; }
+        public ProfileForm(User user)
         {
             InitializeComponent();
             AuthUser = user;
@@ -59,7 +59,7 @@ namespace ClientApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Conta user = AuthUser;
+            User user = AuthUser;
 
             if (this.textBox2.Text.Length > 0 && this.textBox2.Text.Length < 50)
             {
@@ -124,7 +124,7 @@ namespace ClientApp
                     // The user canceled.
                     this.Close();
                 }
-                
+
             }
 
             string link = String.Format("http://localhost:50766/api/conta/" + user.Id);
@@ -205,7 +205,7 @@ namespace ClientApp
             byte[] image = File.ReadAllBytes(filePath);
 
 
-            Conta user = new Conta();
+            User user = new User();
             //user.Photo = System.Text.Encoding.UTF8.GetString(image); 
             user.Id = AuthUser.Id;
 

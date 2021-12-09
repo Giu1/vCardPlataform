@@ -31,11 +31,11 @@ namespace vCardPlatformApi.Controllers
                 command.Parameters.AddWithValue("@idPedidosTable", id);
                 SqlDataReader reader = command.ExecuteReader();
 
-                Conta pedidoAInserir = null;
+                User pedidoAInserir = null;
 
                 while (reader.Read())
                 {
-                    pedidoAInserir = new Conta();
+                    pedidoAInserir = new User();
                     pedidoAInserir.Id = (int)reader["PhoneNumber"];
                     pedidoAInserir.Balance = (float)reader["Balance"];
                     pedidoAInserir.AccountOwner = (string)reader["AccountOwner"];
@@ -84,11 +84,6 @@ namespace vCardPlatformApi.Controllers
 
 
 
-
-
-
-
-
         [Route("banks/{id}")]
         [HttpGet]
         public IHttpActionResult Index()
@@ -110,23 +105,19 @@ namespace vCardPlatformApi.Controllers
                 reader.Close();
             }
 
-
-
-            
-
             return Ok();
         }
 
         [Route("{id}")]
         [HttpPut]
-        public IHttpActionResult Put([FromBody] Conta user,int id)
+        public IHttpActionResult Put([FromBody] User user,int id)
         {
             //gets the user in BD
 
             SqlConnection connection = null;
             SqlCommand command = null;
             SqlDataReader reader = null;
-            Conta oldUser = null;
+            User oldUser = null;
             try
             {
                 connection = new SqlConnection(connectionString);
@@ -136,11 +127,11 @@ namespace vCardPlatformApi.Controllers
                 command.Parameters.AddWithValue("@idPedidosTable", id);
                 reader = command.ExecuteReader();
 
-                
+
 
                 while (reader.Read())
                 {
-                    oldUser = new Conta();
+                    oldUser = new User();
                     oldUser.AccountOwner = (string)reader["AccountOwner"];
                     oldUser.Email = (string)reader["Email"];
                     oldUser.ConfirmationCode = (int)reader["ConfirmationCode"];
@@ -164,7 +155,7 @@ namespace vCardPlatformApi.Controllers
                 {
                     return NotFound();
                 }
-               
+
             }
             catch (Exception e)
             {
@@ -186,7 +177,7 @@ namespace vCardPlatformApi.Controllers
                 connection = new SqlConnection(connectionString);
                 connection.Open();
 
-                
+
 
 
                 if (user.Photo != null)
@@ -202,7 +193,7 @@ namespace vCardPlatformApi.Controllers
                     command = new SqlCommand(cmdSQL, connection);
                 }
 
-                
+
                 command.Parameters.AddWithValue("@id", id);
 
                 if (user.Balance != 0)
@@ -223,9 +214,9 @@ namespace vCardPlatformApi.Controllers
                     command.Parameters.AddWithValue("@accountowner", oldUser.AccountOwner);
                 }
 
-                if ( user.ConfirmationCode!=0)
+                if (user.ConfirmationCode != 0)
                 {
-                    if (user.ConfirmationCode>=1000 && user.ConfirmationCode<=9999)
+                    if (user.ConfirmationCode >= 1000 && user.ConfirmationCode <= 9999)
                     {
                         command.Parameters.AddWithValue("@confirmationcode", user.ConfirmationCode);
                     }
@@ -240,9 +231,9 @@ namespace vCardPlatformApi.Controllers
                     command.Parameters.AddWithValue("@confirmationcode", oldUser.ConfirmationCode);
                 }
 
-                
 
-                if (user.Password!=null)
+
+                if (user.Password != null)
                 {
                     command.Parameters.AddWithValue("@password", user.Password);
                 }
@@ -251,7 +242,7 @@ namespace vCardPlatformApi.Controllers
                     command.Parameters.AddWithValue("@password", oldUser.Password);
                 }
 
-                if (user.Email!=null)
+                if (user.Email != null)
                 {
                     command.Parameters.AddWithValue("@email", user.Email);
                 }
@@ -259,7 +250,7 @@ namespace vCardPlatformApi.Controllers
                 {
                     command.Parameters.AddWithValue("@email", oldUser.Email);
                 }
-                       
+
 
                 int numRows = command.ExecuteNonQuery();
 
@@ -285,11 +276,11 @@ namespace vCardPlatformApi.Controllers
 
         [Route("")]
         [HttpPost]
-        public IHttpActionResult Post(Conta user)
+        public IHttpActionResult Post(User user)
         {
             SqlConnection connection = null;
             SqlCommand command = null;
-            
+
 
             connection = null;
             try
@@ -299,13 +290,14 @@ namespace vCardPlatformApi.Controllers
 
                 if (user.Photo != null)
                 {
-                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,@photo,@password)";
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,@photo,@password,NULL,NULL)";
                     command = new SqlCommand(cmdSQL, connection);
                     command.Parameters.AddWithValue("@photo", Convert.FromBase64String(user.Photo));
                 }
                 else
                 {
-                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,NULL,@password)";
+                    //falta os 2 ultimos parametros
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,NULL,@password,NULL,NULL)";
                     command = new SqlCommand(cmdSQL, connection);
                 }
 
@@ -328,6 +320,106 @@ namespace vCardPlatformApi.Controllers
 
                 if (numRows > 0)
                 {
+                    return Created("Sucesso",user);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return BadRequest(e.Message + e.StackTrace);
+            }
+
+        }
+
+
+        [Route("{id:int}")]
+        [HttpDelete]
+        public IHttpActionResult Delete(int id)
+        {
+            //gets the user in BD
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            SqlDataReader reader = null;
+            Conta UserRemove = null;
+            
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Contas WHERE PhoneNumber=@idPedidosTable";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", id);
+                reader = command.ExecuteReader();
+
+
+
+                while (reader.Read())
+                {
+                    UserRemove = new Conta();
+                    UserRemove.AccountOwner = (string)reader["AccountOwner"];
+                    UserRemove.Email = (string)reader["Email"];
+                    UserRemove.ConfirmationCode = (int)reader["ConfirmationCode"];
+                    UserRemove.Password = (string)reader["Password"];
+                    UserRemove.Balance = (float)reader["Balance"];
+                    if (reader["Photo"] != DBNull.Value)
+                    {
+                        UserRemove.Photo = Convert.ToBase64String((Byte[])reader["Photo"]);
+                    }
+                    else
+                    {
+                        UserRemove.Photo = null;
+                    }
+
+
+                }
+
+                reader.Close();
+                connection.Close();
+                if (UserRemove == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+            if (UserRemove.Balance != 0)
+            {
+                return BadRequest("Account balance must be 0 to delete");
+            }
+
+            //inserts full client
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                string cmdSQL = "DELETE FROM Contas WHERE PhoneNumber=@id";
+                command = new SqlCommand(cmdSQL, connection);
+
+                command.Parameters.AddWithValue("@id", id);
+
+                int numRows = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (numRows > 0)
+                {
                     return Ok();
                 }
 
@@ -342,7 +434,6 @@ namespace vCardPlatformApi.Controllers
 
                 return Ok(e.Message + e.StackTrace);
             }
-
         }
     }
 }

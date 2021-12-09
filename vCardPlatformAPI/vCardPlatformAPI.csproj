@@ -90,12 +90,11 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ContasController.cs" />
-    <Compile Include="Controllers\MovimentosController.cs" />
+    <Compile Include="Controllers\ApiMovimentosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\MovimentoBancario.cs" />
-    <Compile Include="Models\Conta.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserBankSide.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -112,6 +111,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\bank1-API.csproj">
+      <Project>{2ffd75b0-669a-4c35-881d-5390dbb1f100}</Project>
+      <Name>bank1-API</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
