@@ -131,14 +131,14 @@ namespace vCardPlatformApi.Controllers
 
         [Route("{id}")]
         [HttpPut]
-        public IHttpActionResult Put([FromBody] Conta user,int id)
+        public IHttpActionResult Put([FromBody] User user,int id)
         {
             //gets the user in BD
 
             SqlConnection connection = null;
             SqlCommand command = null;
             SqlDataReader reader = null;
-            Conta oldUser = null;
+            User oldUser = null;
             try
             {
                 connection = new SqlConnection(connectionString);
@@ -152,7 +152,7 @@ namespace vCardPlatformApi.Controllers
 
                 while (reader.Read())
                 {
-                    oldUser = new Conta();
+                    oldUser = new User();
                     oldUser.AccountOwner = (string)reader["AccountOwner"];
                     oldUser.Email = (string)reader["Email"];
                     oldUser.ConfirmationCode = (int)reader["ConfirmationCode"];
@@ -297,7 +297,7 @@ namespace vCardPlatformApi.Controllers
 
         [Route("")]
         [HttpPost]
-        public IHttpActionResult Post(Conta user)
+        public IHttpActionResult Post(User user)
         {
             SqlConnection connection = null;
             SqlCommand command = null;

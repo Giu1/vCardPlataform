@@ -33,7 +33,7 @@ namespace ClientApp
         {
             string link = String.Format("http://localhost:50766/api/movimento/pagamento");
 
-            MovimentoBancario movimentoBancario = new MovimentoBancario();
+            vCardPlatform.Models.MovimentoBancario movimentoBancario = new vCardPlatform.Models.MovimentoBancario();
 
             movimentoBancario.IdSender = conta.Id + "";
             movimentoBancario.IdReceiver = textBox1.Text;

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using vCardPlatform.Models;
-using User = vCardPlatformAPI.Models.User;
+using vCardPlatformAPI.Models;
 using ContaBankSide = vCardPlatform.Models.Conta;
 
 namespace ClientApp
@@ -69,7 +69,7 @@ namespace ClientApp
 
             string link = String.Format("http://localhost:50766/api/movimentos/depositar");
 
-            MovimentoBancario registoNoBanco = new MovimentoBancario();
+            vCardPlatform.Models.MovimentoBancario registoNoBanco = new vCardPlatform.Models.MovimentoBancario();
 
             try
             {
