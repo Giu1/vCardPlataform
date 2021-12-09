@@ -131,5 +131,15 @@ namespace ClientApp
         {
 
         }
+
+        private void buttonRegisterNew_Click(object sender, EventArgs e)
+        {
+            RegisterForm ReForm = new RegisterForm();
+            this.Hide();
+
+            ReForm.ShowDialog();
+
+            this.Close();
+        }
     }
 }
