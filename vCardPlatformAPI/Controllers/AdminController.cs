@@ -11,7 +11,7 @@ using vCardPlatformAPI.Models;
 
 namespace vCardPlatformApi.Controllers
 {
-    [RoutePrefix("api/adminconsole")]
+    [RoutePrefix("api/admin")]
 
     public class AdminController : ApiController
     {
