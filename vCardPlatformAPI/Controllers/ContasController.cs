@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
-
+using vCardPlatform.Models;
 using vCardPlatformAPI.Models;
 
 namespace vCardPlatformApi.Controllers
@@ -346,7 +346,7 @@ namespace vCardPlatformApi.Controllers
             SqlConnection connection = null;
             SqlCommand command = null;
             SqlDataReader reader = null;
-            Conta UserRemove = null;
+            User UserRemove = null;
             
             try
             {
@@ -361,7 +361,7 @@ namespace vCardPlatformApi.Controllers
 
                 while (reader.Read())
                 {
-                    UserRemove = new Conta();
+                    UserRemove = new User();
                     UserRemove.AccountOwner = (string)reader["AccountOwner"];
                     UserRemove.Email = (string)reader["Email"];
                     UserRemove.ConfirmationCode = (int)reader["ConfirmationCode"];
