@@ -329,7 +329,7 @@ namespace vCardPlatformApi.Controllers
 
                 if (numRows > 0)
                 {
-                    return Ok();
+                    return Created("Sucesso",user);
                 }
 
                 return NotFound();
@@ -341,7 +341,7 @@ namespace vCardPlatformApi.Controllers
                     connection.Close();
                 }
 
-                return Ok(e.Message + e.StackTrace);
+                return BadRequest(e.Message + e.StackTrace);
             }
 
         }

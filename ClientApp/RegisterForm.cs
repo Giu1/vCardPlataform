@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using System.IO;
 using System.Net;
 using vCardPlatformAPI.Models;
+using Newtonsoft.Json;
 
 namespace ClientApp
 {
@@ -24,58 +25,49 @@ namespace ClientApp
 
         private void buttonSubmit_Click(object sender, EventArgs e)
         {
-            Conta obj = null;
-            String phoneNumber = this.textBoxPhoneNumber.Text;
-            String accountowner = textBoxAccountOwner.Text;
-            String email = this.textBoxEmail.Text;
-            String confirmationcode = textBoxConfirmationCode.Text;
-            String password = Hash_SHA256(this.textBoxPassword.Text);
+            Conta obj = new Conta
+            {
+                Id = int.Parse(textBoxPhoneNumber.Text),
+                AccountOwner = textBoxAccountOwner.Text,
+                Email = this.textBoxEmail.Text,
+                ConfirmationCode = int.Parse(textBoxConfirmationCode.Text),
+                Password = LoginForm.Hash_SHA256(this.textBoxPassword.Text)
+            };
 
-            if (!Int32.TryParse(phoneNumber, out int id) || phoneNumber.Length != 9)
+            if (obj.Id <= 900000000 || obj.Id >= 999999999)
             {
-                MessageBox.Show("Por favor inserir 9 numeros.\n (Não inserir codigo de país.)");
-                return;
-            }
-            if (!Int32.TryParse(confirmationcode, out int code) || phoneNumber.Length != 9)
-            {
-                MessageBox.Show("Por favor inserir 9 numeros.\n (Não inserir codigo de país.)");
+                MessageBox.Show("Por favor inserir numeros telemovel Português.\n");
                 return;
             }
 
-            if (accountowner.Length == 0)
-            {
-                MessageBox.Show("Por favor inserir um nome.\n");
-                return;
-            }
-
-            if (email.Length == 0)
-            {
-                MessageBox.Show("Por favor inserir um email.\n");
-                return;
-            }
-
-            if (confirmationcode.Length != 4)
+            if (obj.ConfirmationCode <= 0000 || obj.ConfirmationCode >=9999)
             {
                 MessageBox.Show("Por favor inserir 4 numeros para o codigo.\n");
                 return;
             }
 
-            if (password.Length >= 3)
+            if (obj.AccountOwner.Length == 0)
+            {
+                MessageBox.Show("Por favor inserir um nome.\n");
+                return;
+            }
+
+            if (obj.Email.Length == 0)
+            {
+                MessageBox.Show("Por favor inserir um email.\n");
+                return;
+            }
+
+            if (obj.Password.Length <= 3)
             {
                 MessageBox.Show("Por favor inserir pelo menos 3 caracters para a password.\n");
                 return;
             }
 
-            obj.Id = id;
-            obj.AccountOwner = accountowner;
-            obj.Email = email;
-            obj.ConfirmationCode = code;
-            obj.Password = password;
-
-            string link = String.Format("http://localhost:50766/api/conta/" + phoneNumber);
+            string link = String.Format("http://localhost:50766/api/conta/" + obj.Id);
 
             //T
-
+            /*
             try
             {
                 WebRequest request = WebRequest.Create(link);
@@ -88,41 +80,35 @@ namespace ClientApp
 
                 return;
             }
-            catch (Exception){}
+            catch (Exception) { }
+            */
 
-            link = String.Format("http://localhost:50766/api/conta/");
+            link = String.Format("http://localhost:50766");
+            var contaInJson = JsonConvert.SerializeObject(obj);
 
             try
             {
-                WebRequest requestCreat = WebRequest.Create(link);
-                requestCreat.Method = "POST";
-                HttpWebResponse response = null;
+                var client = new RestSharp.RestClient(link);
+                var request = new RestSharp.RestRequest("api/conta/", RestSharp.Method.POST);
+                request.AddJsonBody(contaInJson);
 
-                response = (HttpWebResponse)requestCreat.GetResponse();
+                RestSharp.IRestResponse response = client.Execute(request);
+                MessageBox.Show(response.StatusCode.ToString());
 
-                
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    LoginForm LogForm = new LoginForm();
+                    this.Hide();
+
+                    LogForm.ShowDialog();
+
+                    this.Close();
+                }
             }
             catch (Exception)
             {
                 MessageBox.Show("Falha ao criar conta");
                 return;
-            }
-
-        }
-
-        public static string Hash_SHA256(string input)
-        {
-            using (SHA256Managed sha1 = new SHA256Managed())
-            {
-                var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
-                var sb = new StringBuilder(hash.Length * 2);
-
-                foreach (byte b in hash)
-                {
-                    sb.Append(b.ToString("X2"));
-                }
-
-                return sb.ToString();
             }
         }
     }

@@ -124,7 +124,7 @@ namespace ClientApp
                     // The user canceled.
                     this.Close();
                 }
-                
+
             }
 
             string link = String.Format("http://localhost:50766/api/conta/" + user.Id);

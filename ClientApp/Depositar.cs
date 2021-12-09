@@ -59,7 +59,7 @@ namespace ClientApp
                 return;
             }
 
-            label2.Text = label2.Text + "  "+obj.Balance + " €";
+            label2.Text = label2.Text + "  " + obj.Balance + " €";
         }
 
         private void Depositar_Load(object sender, EventArgs e)
@@ -84,14 +84,14 @@ namespace ClientApp
                 MessageBox.Show("Inserir um numero");
                 return;
             }
-            
-            registoNoBanco.Date = DateTime.Now+ "";
+
+            registoNoBanco.Date = DateTime.Now + "";
             registoNoBanco.IdReceiver = "teste";
             registoNoBanco.BankRefReceiver = "teste";
             registoNoBanco.IdSender = authUser.BankId;
             registoNoBanco.BankRefSender = authUser.BankRef;
-            
-            
+
+
             try
             {
                 WebRequest request = WebRequest.Create(link);
@@ -124,11 +124,11 @@ namespace ClientApp
 
                 return;
             }
-            
+
 
             //update no balanço da conta do user
 
-             link = String.Format("http://localhost:50766/api/conta/" + authUser.Id);
+            link = String.Format("http://localhost:50766/api/conta/" + authUser.Id);
 
             Conta obj = new Conta();
             obj.Id = authUser.Id;
@@ -188,7 +188,7 @@ namespace ClientApp
 
                 response = (HttpWebResponse)request.GetResponse();
 
-               
+
             }
             catch (Exception)
             {

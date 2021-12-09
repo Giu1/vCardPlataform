@@ -34,7 +34,7 @@ namespace ClientApp
 
             MovimentoBancario movimentoBancario = new MovimentoBancario();
 
-            movimentoBancario.IdSender = conta.Id+"";
+            movimentoBancario.IdSender = conta.Id + "";
             movimentoBancario.IdReceiver = textBox1.Text;
             movimentoBancario.Amount = float.Parse(textBox2.Text);
 
