@@ -90,11 +90,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ContasController.cs" />
     <Compile Include="Controllers\MovimentosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdminAccount.cs" />
     <Compile Include="Models\MovimentoBancario.cs" />
     <Compile Include="Models\Conta.cs" />
     <Compile Include="Models\UserBankSide.cs" />
