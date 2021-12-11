@@ -29,7 +29,7 @@ namespace Admin
 
             //verificar se existe
 
-            string link = String.Format("http://localhost:50766/api/admin/");
+            string link = String.Format("http://localhost:50766/api/admin/login");
 
             try
             {

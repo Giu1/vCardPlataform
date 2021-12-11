@@ -58,6 +58,7 @@ namespace ClientApp
             this.textBoxPhoneNumber.Name = "textBoxPhoneNumber";
             this.textBoxPhoneNumber.Size = new System.Drawing.Size(148, 20);
             this.textBoxPhoneNumber.TabIndex = 1;
+            this.textBoxPhoneNumber.TextChanged += new System.EventHandler(this.textBoxPhoneNumber_TextChanged);
             // 
             // label1
             // 
@@ -67,6 +68,7 @@ namespace ClientApp
             this.label1.Size = new System.Drawing.Size(78, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Phone Number";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // textBoxAccountOwner
             // 
@@ -74,6 +76,7 @@ namespace ClientApp
             this.textBoxAccountOwner.Name = "textBoxAccountOwner";
             this.textBoxAccountOwner.Size = new System.Drawing.Size(148, 20);
             this.textBoxAccountOwner.TabIndex = 3;
+            this.textBoxAccountOwner.TextChanged += new System.EventHandler(this.textBoxAccountOwner_TextChanged);
             // 
             // textBoxEmail
             // 
@@ -81,6 +84,7 @@ namespace ClientApp
             this.textBoxEmail.Name = "textBoxEmail";
             this.textBoxEmail.Size = new System.Drawing.Size(148, 20);
             this.textBoxEmail.TabIndex = 4;
+            this.textBoxEmail.TextChanged += new System.EventHandler(this.textBoxEmail_TextChanged);
             // 
             // textBoxConfirmationCode
             // 
@@ -88,6 +92,7 @@ namespace ClientApp
             this.textBoxConfirmationCode.Name = "textBoxConfirmationCode";
             this.textBoxConfirmationCode.Size = new System.Drawing.Size(147, 20);
             this.textBoxConfirmationCode.TabIndex = 5;
+            this.textBoxConfirmationCode.TextChanged += new System.EventHandler(this.textBoxConfirmationCode_TextChanged);
             // 
             // textBoxPassword
             // 
@@ -95,6 +100,7 @@ namespace ClientApp
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(148, 20);
             this.textBoxPassword.TabIndex = 6;
+            this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPassword_TextChanged);
             // 
             // label2
             // 
@@ -104,6 +110,7 @@ namespace ClientApp
             this.label2.Size = new System.Drawing.Size(81, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Account Owner";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
@@ -113,6 +120,7 @@ namespace ClientApp
             this.label3.Size = new System.Drawing.Size(32, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Email";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label4
             // 
@@ -122,6 +130,7 @@ namespace ClientApp
             this.label4.Size = new System.Drawing.Size(93, 13);
             this.label4.TabIndex = 9;
             this.label4.Text = "Confirmation Code";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label5
             // 
@@ -131,6 +140,7 @@ namespace ClientApp
             this.label5.Size = new System.Drawing.Size(53, 13);
             this.label5.TabIndex = 10;
             this.label5.Text = "Password";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // RegisterForm
             // 
@@ -150,6 +160,7 @@ namespace ClientApp
             this.Controls.Add(this.buttonSubmit);
             this.Name = "RegisterForm";
             this.Text = "RegisterForm";
+            this.Load += new System.EventHandler(this.RegisterForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

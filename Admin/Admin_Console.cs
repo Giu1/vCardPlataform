@@ -126,6 +126,8 @@ namespace AdminConsole
         {
             Form change = new ChangeXForm(x);
             change.Show();
+            Form console = this;
+            console.Close();
         }
 
         private void AdminConsole_Load(object sender, EventArgs e)
@@ -160,6 +162,10 @@ namespace AdminConsole
         private void button7_Click(object sender, EventArgs e)
         {
             // Creation Form 
+            Form console = this;
+            console.Close();
+            Form create = new Admin_Create();
+            create.Show();
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -174,6 +180,11 @@ namespace AdminConsole
         }
 
         private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxFiltro_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

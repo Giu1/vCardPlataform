@@ -136,6 +136,7 @@ namespace AdminConsole
             this.comboBoxFiltro.Name = "comboBoxFiltro";
             this.comboBoxFiltro.Size = new System.Drawing.Size(104, 21);
             this.comboBoxFiltro.TabIndex = 91;
+            this.comboBoxFiltro.SelectedIndexChanged += new System.EventHandler(this.comboBoxFiltro_SelectedIndexChanged);
             // 
             // button12
             // 

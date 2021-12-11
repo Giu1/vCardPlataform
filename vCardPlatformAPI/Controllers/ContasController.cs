@@ -127,8 +127,6 @@ namespace vCardPlatformApi.Controllers
                 command.Parameters.AddWithValue("@idPedidosTable", id);
                 reader = command.ExecuteReader();
 
-
-
                 while (reader.Read())
                 {
                     oldUser = new User();
@@ -145,17 +143,13 @@ namespace vCardPlatformApi.Controllers
                     {
                         oldUser.Photo = null;
                     }
-
-
                 }
-
                 reader.Close();
                 connection.Close();
                 if (oldUser == null)
                 {
                     return NotFound();
                 }
-
             }
             catch (Exception e)
             {
@@ -167,18 +161,13 @@ namespace vCardPlatformApi.Controllers
                 return Ok(e.Message + e.StackTrace);
             }
 
-
             //inserts full client
-
 
             connection = null;
             try
             {
                 connection = new SqlConnection(connectionString);
                 connection.Open();
-
-
-
 
                 if (user.Photo != null)
                 {
@@ -192,7 +181,6 @@ namespace vCardPlatformApi.Controllers
                     string cmdSQL = "UPDATE Contas set AccountOwner=@accountowner,ConfirmationCode=@confirmationcode,Balance=@balance,Password=@password,Email=@email WHERE PhoneNumber =@id";
                     command = new SqlCommand(cmdSQL, connection);
                 }
-
 
                 command.Parameters.AddWithValue("@id", id);
 

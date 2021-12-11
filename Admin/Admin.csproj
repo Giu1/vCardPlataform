@@ -56,6 +56,12 @@
     <Compile Include="Admin_Console.Designer.cs">
       <DependentUpon>Admin_Console.cs</DependentUpon>
     </Compile>
+    <Compile Include="Admin_Create.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin_Create.Designer.cs">
+      <DependentUpon>Admin_Create.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChangeXForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +80,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Admin_Console.resx">
       <DependentUpon>Admin_Console.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin_Create.resx">
+      <DependentUpon>Admin_Create.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ChangeXForm.resx">
       <DependentUpon>ChangeXForm.cs</DependentUpon>

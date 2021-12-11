@@ -12,12 +12,60 @@ namespace vCardPlatformAPI.Controllers
     [RoutePrefix("api/admin")]
     public class AdminImportartanteController : ApiController
     {
+        String[] Accounts = { };
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ProductsApp.Properties.Settings.ConnectionToDB"].ConnectionString;
         AdminAccount account = null;
 
-        [Route("")]
+        [Route("{id}")]
+        public IHttpActionResult GetById(int id)
+        {
+            SqlConnection connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Admins WHERE Id=@id";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+
+                while (reader.Read())
+                {
+                    account = new AdminAccount();
+                    account.Id = (string)reader["Id"];
+                    account.Email = (string)reader["Email"];
+                    account.Password = (string)reader["Password"];
+                    account.Nome = (string)reader["Nome"];
+                    account.Enabled = (int)reader["Enabled"];
+                  
+                }
+
+                reader.Close();
+                connection.Close();
+                if (account != null)
+                {
+                    return Ok(account);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+        }
+
+        [Route("login")]
         [HttpGet]
-        public IHttpActionResult GetById()
+        public IHttpActionResult GetByIdLogin()
         {
 
             var re = Request;
@@ -48,6 +96,7 @@ namespace vCardPlatformAPI.Controllers
                     adminConta.Email = (string)reader["Email"];
                     adminConta.Password = (string)reader["Password"];
                     adminConta.Nome = (string)reader["Nome"];
+                    adminConta.Enabled = (int)reader["Enabled"];  
 
                 }
 
@@ -71,30 +120,47 @@ namespace vCardPlatformAPI.Controllers
 
                 return Ok(e.Message + e.StackTrace);
             }
-        }
-
-        [Route("{id}")]
-        [HttpPut]
-        public IHttpActionResult PutStatus([FromBody] String id)
+        }                                       // Get Account By Email
+        
+        [Route("admins")]
+        [HttpGet]
+        public IHttpActionResult GetAll()
         {
 
-            AdminAccount current = SearchAccount(id);
-
             SqlConnection connection = null;
-            SqlCommand command = null;
-            connection = null;
+            List<string> acc = new List<string>();
+            
+
             try
             {
                 connection = new SqlConnection(connectionString);
-                connection.Open();
-                if (current.Enabled == 1) { current.Enabled = 0; }
-                else { current.Enabled = 1; }
 
-                string cmdSQL = "UPDATE Admins set Enabled=@Enabled WHERE Email =@Email";
-                command = new SqlCommand(cmdSQL, connection);
-                command.Parameters.AddWithValue("@Email", current.Email);
-                command.Parameters.AddWithValue("@Enabled", current.Enabled);
-                return Ok();
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Admins";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                AdminAccount adminConta = null;
+
+                while (reader.Read())
+                {
+                    adminConta = new AdminAccount();
+                    adminConta.Id = (string)reader["Id"];
+                    adminConta.Nome = (string)reader["Nome"];
+                    acc.Add("ID: "+adminConta.Id+" Nome: "+adminConta.Nome);
+
+                }
+                Accounts = acc.ToArray();
+                reader.Close();
+                connection.Close();
+                if (Accounts != null)
+                {
+                    return Ok(Accounts);
+                }
+                else
+                {
+                    return Ok("Dead End");
+                }
             }
             catch (Exception e)
             {
@@ -105,8 +171,278 @@ namespace vCardPlatformAPI.Controllers
 
                 return Ok(e.Message + e.StackTrace);
             }
+        }                                             // Get All Accounts
+
+        [Route("status/{id}")] 
+        [HttpPut]
+        public IHttpActionResult PutStatus([FromBody]AdminAccount admin, String id)
+        {
+
+            AdminAccount current = null;
+            // gets the user in BD
+
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            SqlDataReader reader = null;
+            
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                current = admin;
+                string cmdSQL = "UPDATE Admins set Enabled=@enabled WHERE Email=@email";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@email", current.Email);
+                command.Parameters.AddWithValue("@enabled", current.Enabled);
+               
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+            int numRows = command.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (numRows > 0)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }   // Change Account Status
+
+        [Route("name/{id}")]
+        [HttpPut]
+        public IHttpActionResult PutName([FromBody] AdminAccount admin, String id)       // Change Account Name
+        {
+
+            AdminAccount current = null;
+            // gets the user in BD
+
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            SqlDataReader reader = null;
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                current = admin;
+                string cmdSQL = "UPDATE Admins set Nome=@nome WHERE Email=@email";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@email", current.Email);
+                command.Parameters.AddWithValue("@nome", current.Nome);
+
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+            int numRows = command.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (numRows > 0)
+            {
+                return Ok();
+            }
+
+            return NotFound();
         }
-    
+        
+        [Route("password/{id}")] 
+        [HttpPut]
+        public IHttpActionResult PutPassword([FromBody] AdminAccount admin, String id)
+        {
+
+            AdminAccount current = null;
+            // gets the user in BD
+
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            SqlDataReader reader = null;
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                current = admin;
+                string cmdSQL = "UPDATE Admins set Password=@password WHERE Email=@email";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@email", current.Email);
+                command.Parameters.AddWithValue("@password", current.Password);
+
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+            int numRows = command.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (numRows > 0)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }// Change Account Password
+
+        [Route("email/{id}")] 
+        [HttpPut]
+        public IHttpActionResult PutEmail([FromBody] AdminAccount admin, String id)
+        {
+
+            AdminAccount current = null;
+            // gets the user in BD
+
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            SqlDataReader reader = null;
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                current = admin;
+                string cmdSQL = "UPDATE Admins set Email=@email WHERE Id=@id";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@email", current.Email);
+                command.Parameters.AddWithValue("@id", current.Id);
+
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+            int numRows = command.ExecuteNonQuery();
+
+            connection.Close();
+
+            if (numRows > 0)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }   // Change Account Email
+
+        [Route("newadmin")]
+        [HttpPost]
+        public IHttpActionResult Post([FromBody] AdminAccount user)
+        {
+            SqlConnection connection = null;
+            SqlCommand command = null;
+
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                if (user != null)
+                {
+                    string cmdSQL = "INSERT INTO Admins values(@Id,@Nome,@Email,@Enabled,@Password)";
+                    command = new SqlCommand(cmdSQL, connection);
+                    command.Parameters.AddWithValue("@Id", user.Id);
+                    command.Parameters.AddWithValue("@Nome", user.Nome);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@Enabled", user.Enabled);
+
+                }
+
+                int numRows = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (numRows > 0)
+                {
+                    return Ok(user);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return BadRequest(e.Message + e.StackTrace);
+            }
+
+        }
+
+        [Route("delete/{id}")]
+        [HttpDelete]
+        public IHttpActionResult DeleteAccount(String id)
+        {
+            SqlConnection connection = null;
+            SqlCommand command = null;
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+                string cmdSQL = "DELETE FROM Admins WHERE Id=@id";
+                command = new SqlCommand(cmdSQL, connection);
+
+                command.Parameters.AddWithValue("@id", id);
+
+                int numRows = command.ExecuteNonQuery();
+
+                connection.Close();
+
+                if (numRows > 0)
+                {
+                    return Ok();
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+           
+        }
+
         private AdminAccount SearchAccount(String id)
         {
             SqlConnection connection = null;
