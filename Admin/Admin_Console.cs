@@ -8,6 +8,8 @@ using System.Net;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 using vCardPlatformAPI.Models;
 
 namespace AdminConsole
@@ -20,6 +22,8 @@ namespace AdminConsole
         String[] curBank = { };
         int setvalueindex = -1;
         int index = -1;
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
+        MqttClient broker;
         String[] FilterTypes = { "By Bank", "By Transfer Type", "By Time", "By Balance" };
         String[] FilterTransfer = { "Credito","Debito" };
         String[] FilterTime = { "1 Week", "1 month", "6 months", "1 Year" };
@@ -39,6 +43,8 @@ namespace AdminConsole
 
         private void button16_Click(object sender, EventArgs e) //Btn Logout
         {
+            broker.Disconnect();
+            base.OnClosed(e);
             Form login = new LoginForm();
             login.Show();
             Form consolehere = this;
@@ -47,17 +53,17 @@ namespace AdminConsole
 
         private void button11_Click(object sender, EventArgs e)
         {
-            //ConnectMosquitto();
+            ConnectMosquitto();
             //RequestAllOperations();
 
         }
         private void ConnectMosquitto()
         {
-            /* broker = new MqttClient(localhost);
+             broker = new MqttClient(localhost);
              try
              {
-
-                 broker.Connect(Guid.NewGuid().ToString());
+                broker.MqttMsgPublishReceived += broker_MqttMsgPublishReceived;
+                broker.Connect(Guid.NewGuid().ToString());
                  if (!broker.IsConnected)
                  {
                      Console.WriteLine("Error connecting to message broker...");
@@ -69,15 +75,28 @@ namespace AdminConsole
              catch (Exception)
              {
                  MessageBox.Show("Verifique a disponibilidade do broker");
-             }*/
+             }
         }
+
+        private void broker_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void RequestAllOperations()
         {
+            String[] s = { "Feed" };
+            broker.Subscribe(s, qosLevels);
+            MessageBox.Show("Subscribed to Feed Succefully");
+            GetFeed();
             // TO DO
         }
 
+      
         private void button17_Click(object sender, EventArgs e)
         {
+            broker.Disconnect();
+            base.OnClosed(e);
             Application.Exit();
         }
 
@@ -244,29 +263,35 @@ namespace AdminConsole
 
         private void button8_Click(object sender, EventArgs e)      // Btn adicionar banco
         {
-            List<String> list = new List<String>();
-            List<String> ends = new List<String>();
-            list = Entities.ToList<string>();
-            ends = EntIp.ToList<string>();
-            string newBank = textBox3.Text;
-            string newEnd = "http://localhost:44360/" + textBox4.Text + "/";
-            // Fazer checks de qualidade de data TO DO
+            if (textBox3.Text != "")
+            {
+                if(textBox4.Text != "")
+                {
+                    List<String> list = new List<String>();
+                    List<String> ends = new List<String>();
+                    list = Entities.ToList<string>();
+                    ends = EntIp.ToList<string>();
+                    string newBank = textBox3.Text;
+                    string newEnd = "http://localhost:44360/" + textBox4.Text + "/";
+                    // Fazer checks de qualidade de data TO DO
 
-            list.Add(newBank);
-            ends.Add(newEnd);
-            
-            Entities = list.ToArray();
-            EntIp = ends.ToArray();
-            MessageBox.Show("Sucesso A Adicionar Banco");
-            listBox1.Items.Clear();
-            listBox1.Items.AddRange(Entities);
+                    list.Add(newBank);
+                    ends.Add(newEnd);
+
+                    Entities = list.ToArray();
+                    EntIp = ends.ToArray();
+                    MessageBox.Show("Sucesso A Adicionar Banco");
+                    listBox1.Items.Clear();
+                    listBox1.Items.AddRange(Entities);
+                }
+                else { MessageBox.Show("Erro : Insira EndPoint Para Banco"); }
+            }
+            else { MessageBox.Show("Erro : Insira Nome Para Banco"); }
+           
         }
 
         private void UpdateBankValues(int index)
         {
-           
-            
-
             if (index>=0)
             {
                 try
@@ -311,6 +336,37 @@ namespace AdminConsole
                 MessageBox.Show("Selecione e Pinge um Banco Primeiro");
                 return;
             }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            listBox2.Text = "";
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GetFeed()
+        {
+            string link = String.Format("http://localhost:50766/api/admin/feed/");
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "GET";
+                HttpWebResponse response = null;
+
+                response = (HttpWebResponse)request.GetResponse();
+                MessageBox.Show("Done");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro: Ao buscar o feed" + ex.Message + ex.StackTrace);
+
+                return;
+            }
+
         }
     }
 

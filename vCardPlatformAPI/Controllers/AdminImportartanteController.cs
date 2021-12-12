@@ -4,7 +4,11 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
+using System.Windows.Forms;
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 using vCardPlatformAPI.Models;
 
 namespace vCardPlatformAPI.Controllers
@@ -15,6 +19,9 @@ namespace vCardPlatformAPI.Controllers
         String[] Accounts = { };
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ProductsApp.Properties.Settings.ConnectionToDB"].ConnectionString;
         AdminAccount account = null;
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
+        MqttClient broker;
+        String localhost = "127.0.0.1";
 
         [Route("{id}")]
         public IHttpActionResult GetById(int id)
@@ -172,6 +179,58 @@ namespace vCardPlatformAPI.Controllers
                 return Ok(e.Message + e.StackTrace);
             }
         }                                             // Get All Accounts
+
+        [Route("feed")]
+        [HttpGet]
+        public IHttpActionResult GetFeed()
+        {
+
+            SqlConnection connection = null;
+            List<string> acc = new List<string>();
+
+
+            try
+            {
+                connection = new SqlConnection(connectionString);
+
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Movimentos";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    acc.Add((string)reader["Type"]);
+                    acc.Add((string)reader["Id_Sender"]);
+                    acc.Add((string)reader["Id_Receiver"]);
+                    acc.Add((string)reader["Amount"]);
+
+                }
+                reader.Close();
+                connection.Close();
+                if (Accounts != null)
+                {
+                    MqttClient c = ConnectMosquitto();
+                    PublishFeed(c,acc);
+                    return Ok();
+                }
+                else
+                {
+                    return Ok("Dead End");
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+        }
+
+      
 
         [Route("status/{id}")] 
         [HttpPut]
@@ -486,7 +545,48 @@ namespace vCardPlatformAPI.Controllers
             }
             return null;
         }
-    
+
+        private MqttClient ConnectMosquitto()
+        {
+            broker = new MqttClient(localhost);
+            try
+            {
+                broker.Connect(Guid.NewGuid().ToString());
+                if (!broker.IsConnected)
+                {
+                    Console.WriteLine("Error connecting to message broker...");
+                    return null;
+                }
+                return broker;
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error connecting to message broker...");
+                return null;
+            }
+        }
+
+        private void PublishFeed(MqttClient broker,List<string> acc)
+        {
+            char[] content;
+            string total = "";
+            foreach(String s in acc)
+            {
+                int i = 0;
+                total = total + s+"\n";
+                i++;
+            }
+            content = total.ToCharArray();
+            broker.Publish("Feed", Encoding.UTF8.GetBytes(content));
+            if (!broker.IsConnected)
+            {
+                Console.WriteLine("Error connecting to message broker...");
+                return;
+            }
+            MessageBox.Show("Published to message broker");
+
+        }
     }
 
 

@@ -68,6 +68,8 @@ namespace AdminConsole
             this.label12 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
+            this.button18 = new System.Windows.Forms.Button();
+            this.button19 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button17
@@ -92,7 +94,7 @@ namespace AdminConsole
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(406, 412);
+            this.button15.Location = new System.Drawing.Point(407, 428);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(90, 21);
             this.button15.TabIndex = 96;
@@ -101,7 +103,7 @@ namespace AdminConsole
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(299, 412);
+            this.button14.Location = new System.Drawing.Point(299, 428);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(79, 21);
             this.button14.TabIndex = 95;
@@ -110,7 +112,7 @@ namespace AdminConsole
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(358, 378);
+            this.button13.Location = new System.Drawing.Point(316, 385);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(72, 21);
             this.button13.TabIndex = 94;
@@ -156,7 +158,7 @@ namespace AdminConsole
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(358, 288);
+            this.button11.Location = new System.Drawing.Point(316, 286);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(72, 21);
             this.button11.TabIndex = 89;
@@ -424,11 +426,33 @@ namespace AdminConsole
             this.label13.TabIndex = 104;
             this.label13.Text = "Ex : bank_1/bank";
             // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(394, 385);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(77, 21);
+            this.button18.TabIndex = 105;
+            this.button18.Text = "Unsubscribe";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(406, 286);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(72, 21);
+            this.button19.TabIndex = 106;
+            this.button19.Text = "Clean Screen";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
             // Admin_Console
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(796, 461);
+            this.Controls.Add(this.button19);
+            this.Controls.Add(this.button18);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.label12);
@@ -515,5 +539,7 @@ namespace AdminConsole
         private Label label12;
         private Button button8;
         private Label label13;
+        private Button button18;
+        private Button button19;
     }
 }
