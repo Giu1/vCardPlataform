@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using User = vCardPlatformAPI.Models.User;
 using ContaBankSide = vCardPlatform.Models.Conta;
 using vCardPlatform.Models;
+using vCardPlatformAPI.Models;
 
 namespace vCardPlatformAPI.Controllers
 {
@@ -33,7 +34,7 @@ namespace vCardPlatformAPI.Controllers
 
         [Route("")]
         [HttpPost]
-        public IHttpActionResult RegistarMovimentos([FromBody] MovimentoBancario movimento)
+        public IHttpActionResult RegistarMovimentos([FromBody] Movimento movimento)
         {
             SqlConnection connection = null;
             connection = new SqlConnection(connectionString);
@@ -45,13 +46,11 @@ namespace vCardPlatformAPI.Controllers
             try
             {
 
-                cmdSQL = "INSERT INTO Movimentos VALUES (@z,@a,@b,@c,@d,@e,@f,@g,@h)";
+                cmdSQL = "INSERT INTO Movimentos(Id,Id_Sender,Id_Receiver,Amount,Description,Date,Type) VALUES (@z,@a,@c,@e,@f,@g,@h)";
                 command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@z", DateTime.Now.Ticks + "");
                 command.Parameters.AddWithValue("@a", movimento.IdSender);
-                command.Parameters.AddWithValue("@b", movimento.BankRefSender);
                 command.Parameters.AddWithValue("@c", movimento.IdReceiver);
-                command.Parameters.AddWithValue("@d", movimento.BankRefReceiver);
 
                 if (movimento.Amount > 0)
                 {
@@ -89,18 +88,358 @@ namespace vCardPlatformAPI.Controllers
             }
         }
 
-        [Route("paga")]
+        [Route("pagamento")]
         [HttpPost]
-        public string Pagamento()
+        public IHttpActionResult PagamentoNaApp([FromBody] Movimento movimento)
         {
-            return "value";
+            //verificar sender
+            SqlConnection connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Contas WHERE PhoneNumber=@idPedidosTable";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", movimento.IdSender);
+                SqlDataReader reader = command.ExecuteReader();
+
+                User sender = null;
+
+                while (reader.Read())
+                {
+                    sender = new User();
+                    sender.Id = (int)reader["PhoneNumber"];
+                    sender.Balance = (float)reader["Balance"];
+                    sender.ConfirmationCode = (int)reader["ConfirmationCode"];
+                    sender.Password = (string)reader["Password"];
+                }
+                reader.Close();
+                connection.Close();
+
+                if (sender == null)
+                {
+                    return Ok("Id sender não encontrado");
+                }
+               
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+
+            //verificar receiver
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Contas WHERE PhoneNumber=@idPedidosTable";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", movimento.IdReceiver);
+                SqlDataReader reader = command.ExecuteReader();
+
+                User receiver = null;
+
+                while (reader.Read())
+                {
+                    receiver = new User();
+                    receiver.Id = (int)reader["PhoneNumber"];
+                    receiver.Balance = (float)reader["Balance"];
+                    receiver.ConfirmationCode = (int)reader["ConfirmationCode"];
+                    receiver.Password = (string)reader["Password"];
+                }
+                reader.Close();
+                connection.Close();
+
+                if (receiver == null)
+                {
+                    return Ok("Id sender não encontrado");
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+            //update saldo sender
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "UPDATE Contas SET Balance = Balance - @amount WHERE PhoneNumber=@id; ";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@amount", movimento.Amount);
+                command.Parameters.AddWithValue("@id", movimento.IdSender);
+
+                if (!(command.ExecuteNonQuery() > 0))
+                {
+                    connection.Close();
+                    return BadRequest("Erro ao atualizar saldo");
+                }
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+            //update saldo receiver
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "UPDATE Contas SET balance = balance + @amount WHERE PhoneNumber=@id; ";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@amount", movimento.Amount);
+                command.Parameters.AddWithValue("@id", movimento.IdReceiver);
+              
+
+                if (!(command.ExecuteNonQuery() > 0))
+                {
+                    connection.Close();
+                    return BadRequest("Erro ao atualizar saldo");
+                }
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+            //emitir movimento sender
+            movimento.Type = TypeOfMoviment.Debito;
+
+
+            String link = String.Format("http://localhost:50766/api/movimentos");
+
+
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                HttpWebResponse response = null;
+                string result = JsonConvert.SerializeObject(movimento);
+
+                byte[] data = Encoding.ASCII.GetBytes(result);
+                request.ContentLength = data.Length;
+
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, result.Length);
+                }
+
+                response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+
+
+                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
+            }
+            //emitir movimento receiver
+            movimento.Type = TypeOfMoviment.Credito;
+
+
+            link = String.Format("http://localhost:50766/api/movimentos");
+
+
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                HttpWebResponse response = null;
+                string result = JsonConvert.SerializeObject(movimento);
+
+                byte[] data = Encoding.ASCII.GetBytes(result);
+                request.ContentLength = data.Length;
+
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, result.Length);
+                }
+
+                response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+
+                    return Ok("Error ao emiter movimentos");
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
+            }
+            return Ok("Tansferencia realizada com sucesso");
         }
 
         [Route("levantar")]
         [HttpPost]
-        public string Levantar()
+        public IHttpActionResult Levantar([FromBody] MovimentoBancario movimentoBancario)
         {
-            return "value";
+            movimentoBancario.IdSender = "1111111111111"; //referencia para conta do banco da plataforma
+            movimentoBancario.BankRefSender = "1111";
+
+            string link = String.Format("http://localhost:50766/api/movimentos/trans");
+
+            //emite transferencia entre utilizador e banco
+
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                HttpWebResponse response = null;
+                string result = JsonConvert.SerializeObject(movimentoBancario);
+
+                byte[] data = Encoding.ASCII.GetBytes(result);
+                request.ContentLength = data.Length;
+
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, result.Length);
+                }
+
+                response = (HttpWebResponse)request.GetResponse();
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return Ok("Erro ao emitir nota - emitir movimento bank side" + ex.Message + "\n" + ex.StackTrace);
+            }
+
+
+            //atualiza saldo na api
+            SqlConnection connection = null;
+            SqlCommand command = null;
+
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+
+                string cmdSQL = "UPDATE Contas set Balance=Balance - @amount WHERE BankID = @id";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@id", movimentoBancario.IdReceiver);
+
+                command.Parameters.AddWithValue("@amount", movimentoBancario.Amount);
+
+
+                if (!(command.ExecuteNonQuery() > 0))
+                {
+                    connection.Close();
+                    return BadRequest("Erro ao atualizar saldo");
+                }
+
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+            //regista movimento 
+
+            //emitir movimentos sender
+
+            movimentoBancario.Type = TypeOfMoviment.Debito;
+
+            Movimento movimento = new Movimento();
+            movimento.IdReceiver = movimentoBancario.IdReceiver;
+            movimento.IdSender = movimentoBancario.IdSender;
+            movimento.Type = movimentoBancario.Type;
+            movimento.Id = movimentoBancario.Id;
+            movimento.Amount = movimentoBancario.Amount;
+            movimento.Description = movimentoBancario.Description;
+            movimento.Date = movimentoBancario.Date;
+
+            link = String.Format("http://localhost:50766/api/movimentos");
+
+
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                HttpWebResponse response = null;
+                string result = JsonConvert.SerializeObject(movimento);
+
+                byte[] data = Encoding.ASCII.GetBytes(result);
+                request.ContentLength = data.Length;
+
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, result.Length);
+                }
+
+                response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+
+
+                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
+            }
+
+            return Ok("Depósito realizado com sucesso");
         }
         [Route("depositar")]
         [HttpPost]
@@ -144,7 +483,7 @@ namespace vCardPlatformAPI.Controllers
             //atualiza saldo na api
             SqlConnection connection = null;
             SqlCommand command = null;
-            SqlDataReader reader = null;
+            
 
             connection = null;
             try
@@ -183,10 +522,17 @@ namespace vCardPlatformAPI.Controllers
 
 
             
-            
-            
             movimentoBancario.Type = TypeOfMoviment.Debito;
-            
+
+            Movimento movimento = new Movimento();
+            movimento.IdReceiver = movimentoBancario.IdReceiver;
+            movimento.IdSender = movimentoBancario.IdSender;
+            movimento.Type = movimentoBancario.Type;
+            movimento.Id = movimentoBancario.Id;
+            movimento.Amount = movimentoBancario.Amount;
+            movimento.Description = movimentoBancario.Description;
+            movimento.Date = movimentoBancario.Date;
+
 
             link = String.Format("http://localhost:50766/api/movimentos");
 
@@ -197,7 +543,7 @@ namespace vCardPlatformAPI.Controllers
                 request.Method = "POST";
                 request.ContentType = "application/json";
                 HttpWebResponse response = null;
-                string result = JsonConvert.SerializeObject(movimentoBancario);
+                string result = JsonConvert.SerializeObject(movimento);
 
                 byte[] data = Encoding.ASCII.GetBytes(result);
                 request.ContentLength = data.Length;
@@ -449,7 +795,6 @@ namespace vCardPlatformAPI.Controllers
 
             //Movimentos
 
-            //se os bancos forem diferentes enviar duas guias se não enviar apenas umas
 
             //emitir movimentos sender
 

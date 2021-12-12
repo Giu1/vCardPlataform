@@ -25,7 +25,7 @@ namespace ClientApp
 
         private void buttonSubmit_Click(object sender, EventArgs e)
         {
-            Conta obj = new Conta
+            User obj = new User
             {
                 Id = int.Parse(textBoxPhoneNumber.Text),
                 AccountOwner = textBoxAccountOwner.Text,

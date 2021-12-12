@@ -69,7 +69,7 @@ namespace ClientApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //emitir movimento bank side
+            //emitir pagamento incluindo bank side
 
             string link = String.Format("http://localhost:50766/api/movimentos/depositar");
 

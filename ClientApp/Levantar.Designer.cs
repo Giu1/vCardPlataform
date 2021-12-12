@@ -85,6 +85,7 @@ namespace ClientApp
             this.Controls.Add(this.label1);
             this.Name = "Levantar";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Levantar_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
