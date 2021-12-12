@@ -62,11 +62,17 @@ namespace AdminConsole
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.button8 = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(617, 393);
+            this.button17.Location = new System.Drawing.Point(615, 412);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(79, 21);
             this.button17.TabIndex = 98;
@@ -76,7 +82,7 @@ namespace AdminConsole
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(87, 393);
+            this.button16.Location = new System.Drawing.Point(93, 412);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(79, 21);
             this.button16.TabIndex = 97;
@@ -86,7 +92,7 @@ namespace AdminConsole
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(405, 393);
+            this.button15.Location = new System.Drawing.Point(406, 412);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(90, 21);
             this.button15.TabIndex = 96;
@@ -95,7 +101,7 @@ namespace AdminConsole
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(298, 393);
+            this.button14.Location = new System.Drawing.Point(299, 412);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(79, 21);
             this.button14.TabIndex = 95;
@@ -104,7 +110,7 @@ namespace AdminConsole
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(357, 359);
+            this.button13.Location = new System.Drawing.Point(358, 378);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(72, 21);
             this.button13.TabIndex = 94;
@@ -115,7 +121,7 @@ namespace AdminConsole
             // comboBoxParametros
             // 
             this.comboBoxParametros.FormattingEnabled = true;
-            this.comboBoxParametros.Location = new System.Drawing.Point(405, 334);
+            this.comboBoxParametros.Location = new System.Drawing.Point(406, 353);
             this.comboBoxParametros.Name = "comboBoxParametros";
             this.comboBoxParametros.Size = new System.Drawing.Size(104, 21);
             this.comboBoxParametros.TabIndex = 93;
@@ -123,7 +129,7 @@ namespace AdminConsole
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(308, 337);
+            this.label10.Location = new System.Drawing.Point(309, 356);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(66, 13);
             this.label10.TabIndex = 92;
@@ -132,7 +138,7 @@ namespace AdminConsole
             // comboBoxFiltro
             // 
             this.comboBoxFiltro.FormattingEnabled = true;
-            this.comboBoxFiltro.Location = new System.Drawing.Point(405, 302);
+            this.comboBoxFiltro.Location = new System.Drawing.Point(406, 321);
             this.comboBoxFiltro.Name = "comboBoxFiltro";
             this.comboBoxFiltro.Size = new System.Drawing.Size(104, 21);
             this.comboBoxFiltro.TabIndex = 91;
@@ -140,16 +146,17 @@ namespace AdminConsole
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(291, 301);
+            this.button12.Location = new System.Drawing.Point(292, 320);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(96, 21);
             this.button12.TabIndex = 90;
             this.button12.Text = "Select Filter Type";
             this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(357, 269);
+            this.button11.Location = new System.Drawing.Point(358, 288);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(72, 21);
             this.button11.TabIndex = 89;
@@ -160,7 +167,7 @@ namespace AdminConsole
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(298, 127);
+            this.listBox2.Location = new System.Drawing.Point(299, 146);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(198, 134);
             this.listBox2.TabIndex = 88;
@@ -178,7 +185,7 @@ namespace AdminConsole
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(100, 333);
+            this.button10.Location = new System.Drawing.Point(82, 358);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(104, 21);
             this.button10.TabIndex = 86;
@@ -189,7 +196,7 @@ namespace AdminConsole
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(108, 258);
+            this.label8.Location = new System.Drawing.Point(90, 283);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(98, 13);
             this.label8.TabIndex = 85;
@@ -197,14 +204,14 @@ namespace AdminConsole
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(163, 305);
+            this.textBox2.Location = new System.Drawing.Point(145, 330);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(97, 20);
             this.textBox2.TabIndex = 84;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(163, 282);
+            this.textBox1.Location = new System.Drawing.Point(145, 307);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(97, 20);
             this.textBox1.TabIndex = 83;
@@ -212,7 +219,7 @@ namespace AdminConsole
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(76, 308);
+            this.label7.Location = new System.Drawing.Point(58, 333);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(83, 13);
             this.label7.TabIndex = 82;
@@ -221,7 +228,7 @@ namespace AdminConsole
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(73, 284);
+            this.label6.Location = new System.Drawing.Point(55, 309);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(85, 13);
             this.label6.TabIndex = 81;
@@ -229,7 +236,7 @@ namespace AdminConsole
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(585, 297);
+            this.button9.Location = new System.Drawing.Point(601, 307);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(111, 33);
             this.button9.TabIndex = 80;
@@ -239,7 +246,7 @@ namespace AdminConsole
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(585, 269);
+            this.button7.Location = new System.Drawing.Point(601, 279);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(111, 21);
             this.button7.TabIndex = 78;
@@ -249,7 +256,7 @@ namespace AdminConsole
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(585, 162);
+            this.button6.Location = new System.Drawing.Point(601, 172);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(111, 21);
             this.button6.TabIndex = 77;
@@ -259,7 +266,7 @@ namespace AdminConsole
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(585, 136);
+            this.button5.Location = new System.Drawing.Point(601, 146);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(111, 21);
             this.button5.TabIndex = 76;
@@ -269,7 +276,7 @@ namespace AdminConsole
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(585, 191);
+            this.button4.Location = new System.Drawing.Point(601, 201);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(111, 21);
             this.button4.TabIndex = 75;
@@ -290,15 +297,15 @@ namespace AdminConsole
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(124, 206);
+            this.label4.Location = new System.Drawing.Point(167, 140);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.Size = new System.Drawing.Size(65, 13);
             this.label4.TabIndex = 73;
-            this.label4.Text = "pingcheck";
+            this.label4.Text = "Bank Status";
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(585, 243);
+            this.button3.Location = new System.Drawing.Point(601, 253);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(111, 21);
             this.button3.TabIndex = 72;
@@ -308,7 +315,7 @@ namespace AdminConsole
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(585, 217);
+            this.button2.Location = new System.Drawing.Point(601, 227);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(111, 21);
             this.button2.TabIndex = 71;
@@ -318,9 +325,9 @@ namespace AdminConsole
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(100, 222);
+            this.button1.Location = new System.Drawing.Point(150, 227);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(104, 21);
+            this.button1.Size = new System.Drawing.Size(104, 35);
             this.button1.TabIndex = 70;
             this.button1.Text = "Check Connectivity";
             this.button1.UseVisualStyleBackColor = true;
@@ -329,7 +336,7 @@ namespace AdminConsole
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(100, 136);
+            this.listBox1.Location = new System.Drawing.Point(150, 165);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(104, 56);
             this.listBox1.TabIndex = 69;
@@ -365,11 +372,69 @@ namespace AdminConsole
             this.label1.TabIndex = 66;
             this.label1.Text = "Banks & Entities";
             // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(21, 159);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(99, 20);
+            this.textBox3.TabIndex = 99;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(21, 221);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(99, 20);
+            this.textBox4.TabIndex = 100;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(18, 140);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(110, 13);
+            this.label11.TabIndex = 101;
+            this.label11.Text = "Add New Bank Name";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(32, 184);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(77, 13);
+            this.label12.TabIndex = 102;
+            this.label12.Text = "Insert endpoint";
+            this.label12.Click += new System.EventHandler(this.label12_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(21, 247);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(99, 27);
+            this.button8.TabIndex = 103;
+            this.button8.Text = "Add";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(27, 201);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(93, 13);
+            this.label13.TabIndex = 104;
+            this.label13.Text = "Ex : bank_1/bank";
+            // 
             // Admin_Console
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(796, 461);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.button17);
             this.Controls.Add(this.button16);
             this.Controls.Add(this.button15);
@@ -444,5 +509,11 @@ namespace AdminConsole
         private Label label3;
         private Label label2;
         private Label label1;
+        private TextBox textBox3;
+        private TextBox textBox4;
+        private Label label11;
+        private Label label12;
+        private Button button8;
+        private Label label13;
     }
 }
