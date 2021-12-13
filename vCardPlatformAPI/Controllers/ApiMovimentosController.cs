@@ -302,7 +302,6 @@ namespace vCardPlatformAPI.Controllers
                     sender.Id = (int)reader["PhoneNumber"];
                     sender.Balance = (float)reader["Balance"];
                     sender.ConfirmationCode = (int)reader["ConfirmationCode"];
-                    sender.Password = (string)reader["Password"];
                 }
                 reader.Close();
                 connection.Close();
@@ -349,7 +348,6 @@ namespace vCardPlatformAPI.Controllers
                     receiver.Id = (int)reader["PhoneNumber"];
                     receiver.Balance = (float)reader["Balance"];
                     receiver.ConfirmationCode = (int)reader["ConfirmationCode"];
-                    receiver.Password = (string)reader["Password"];
                 }
                 reader.Close();
                 connection.Close();
