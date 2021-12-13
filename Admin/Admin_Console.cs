@@ -43,8 +43,8 @@ namespace AdminConsole
 
         private void button16_Click(object sender, EventArgs e) //Btn Logout
         {
-            broker.Disconnect();
-            base.OnClosed(e);
+            //broker.Disconnect();
+            //base.OnClosed(e);
             Form login = new LoginForm();
             login.Show();
             Form consolehere = this;
