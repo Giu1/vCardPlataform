@@ -1,7 +1,7 @@
 ﻿
 namespace ClientApp
 {
-    partial class Levantar
+    partial class Comprar
     {
         /// <summary>
         /// Required designer variable.
@@ -30,62 +30,71 @@ namespace ClientApp
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.8F);
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(80, 63);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(319, 29);
+            this.label1.Size = new System.Drawing.Size(225, 29);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Levantar dinheiro da conta:";
+            this.label1.Text = "Referencia da Loja";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.8F);
+            this.textBox1.Location = new System.Drawing.Point(83, 104);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(135, 35);
+            this.textBox1.TabIndex = 1;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.8F);
+            this.textBox2.Location = new System.Drawing.Point(376, 104);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(135, 35);
+            this.textBox2.TabIndex = 2;
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.8F);
+            this.button1.Location = new System.Drawing.Point(570, 176);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(156, 42);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "Confirmar";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.8F);
-            this.label2.Location = new System.Drawing.Point(57, 51);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.8F);
+            this.label2.Location = new System.Drawing.Point(376, 63);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(163, 26);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Saldo bancário:";
+            this.label2.Size = new System.Drawing.Size(101, 29);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Amount";
             // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.8F);
-            this.textBox1.Location = new System.Drawing.Point(249, 139);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(131, 32);
-            this.textBox1.TabIndex = 2;
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.8F);
-            this.button1.Location = new System.Drawing.Point(419, 133);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(153, 38);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Confirmar";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // Levantar
+            // Comprar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 183);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.ClientSize = new System.Drawing.Size(752, 230);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
-            this.Name = "Levantar";
+            this.Name = "Comprar";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Levantar_Load);
+            this.Load += new System.EventHandler(this.Comprar_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -94,8 +103,9 @@ namespace ClientApp
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -60,6 +60,12 @@
     <Compile Include="Depositar.Designer.cs">
       <DependentUpon>Depositar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Comprar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Comprar.Designer.cs">
+      <DependentUpon>Comprar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Levantar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +110,9 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Comprar.resx">
+      <DependentUpon>Comprar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Depositar.resx">
       <DependentUpon>Depositar.cs</DependentUpon>
     </EmbeddedResource>
