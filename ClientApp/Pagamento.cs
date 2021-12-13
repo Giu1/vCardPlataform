@@ -31,22 +31,22 @@ namespace ClientApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string link = String.Format("http://localhost:50766/api/movimento/pagamento");
+            string link = String.Format("http://localhost:50766/api/movimentos/pagamento");
 
             vCardPlatform.Models.MovimentoBancario movimentoBancario = new vCardPlatform.Models.MovimentoBancario();
 
             movimentoBancario.IdSender = conta.Id + "";
             movimentoBancario.IdReceiver = textBox1.Text;
             movimentoBancario.Amount = float.Parse(textBox2.Text);
-
+            string helper;
             try
             {
                 WebRequest request = WebRequest.Create(link);
                 request.Method = "POST";
                 request.ContentType = "application/json";
-                HttpWebResponse response = null;
+                
                 string result = JsonConvert.SerializeObject(movimentoBancario);
-
+                HttpWebResponse response = null;
                 byte[] data = Encoding.ASCII.GetBytes(result);
                 request.ContentLength = data.Length;
 
@@ -60,14 +60,17 @@ namespace ClientApp
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     this.DialogResult = DialogResult.OK;
+                    
                     MessageBox.Show("Alterações realizadas com sucesso");
                     return;
                 }
+               
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Utilizador não encontrado." + ex.Message + "\n" + ex.StackTrace);
+                
+                MessageBox.Show("Erro: " + ex.Message + "\n" + ex.InnerException);
 
                 return;
             }

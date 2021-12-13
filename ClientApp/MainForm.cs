@@ -126,5 +126,10 @@ namespace ClientApp
             ReloadUser();
             LoadElements();
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Comprar f1 = new Comprar(AuthUser);
+        }
     }
 }

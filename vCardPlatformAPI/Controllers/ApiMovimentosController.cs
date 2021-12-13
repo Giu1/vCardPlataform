@@ -31,6 +31,67 @@ namespace vCardPlatformAPI.Controllers
             return new string[] { "value1", "value2" };
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        public IHttpActionResult GetMovimento(string id)
+        {
+            SqlConnection connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Movimentos WHERE Id=@idPedidosTable";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                MovimentoBancario pedidoAInserir = null;
+
+                while (reader.Read())
+                {
+                    pedidoAInserir = new MovimentoBancario();
+                    pedidoAInserir.Id = (string)reader["Id"];
+                    pedidoAInserir.IdSender = (string)reader["Id_Sender"];
+                    pedidoAInserir.IdReceiver = (string)reader["Id_Receiver"];
+                    pedidoAInserir.Amount = (float)reader["Amount"];
+                    pedidoAInserir.Date = (string)reader["Date"];
+
+                    if (reader["Description"].Equals(System.DBNull.Value))
+                    {
+                        pedidoAInserir.Description = "";
+                    }
+                    else
+                    {
+                        pedidoAInserir.Description = (string)reader["Description"];
+                    }
+
+                    pedidoAInserir.Type = (TypeOfMoviment)Enum.Parse(typeof(TypeOfMoviment), (string)reader["Type"]);
+
+                }
+
+                reader.Close();
+                connection.Close();
+                if (pedidoAInserir != null)
+                {
+                    return Ok(pedidoAInserir);
+                }
+                else
+                {
+                    return BadRequest("Elemento não encontrado");
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+        }
+
+
 
         [Route("")]
         [HttpPost]
@@ -58,7 +119,7 @@ namespace vCardPlatformAPI.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return BadRequest("Erro um movimento não tem valores negativos.");
                 }
                 command.Parameters.Add(new SqlParameter("@f", string.IsNullOrEmpty(movimento.Description) ? (object)DBNull.Value : movimento.Description));
                 string aqui = movimento.Type.ToString();
@@ -74,7 +135,7 @@ namespace vCardPlatformAPI.Controllers
                     return Ok();
                 }
 
-                return NotFound();
+                return BadRequest("Elemento não encontrado");
 
             }
             catch (Exception e)
@@ -88,12 +149,142 @@ namespace vCardPlatformAPI.Controllers
             }
         }
 
+        [Route("comprar")]
+        [HttpPost]
+        public IHttpActionResult Comprar([FromBody] MovimentoBancario movimentoBancario)
+        {
+            movimentoBancario.IdSender = "1111111111111"; //referencia para conta do banco da plataforma
+            movimentoBancario.BankRefSender = "1111";
+
+            string link = String.Format("http://localhost:50766/api/movimentos/trans");
+
+            //emite transferencia entre utilizador e banco
+
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                HttpWebResponse response = null;
+                string result = JsonConvert.SerializeObject(movimentoBancario);
+
+                byte[] data = Encoding.ASCII.GetBytes(result);
+                request.ContentLength = data.Length;
+
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, result.Length);
+                }
+
+                response = (HttpWebResponse)request.GetResponse();
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return Ok("Erro ao emitir nota - emitir movimento bank side" + ex.Message + "\n" + ex.StackTrace);
+            }
+
+
+            //atualiza saldo na api
+            SqlConnection connection = null;
+            SqlCommand command = null;
+
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+
+                string cmdSQL = "UPDATE Contas set Balance=Balance - @amount WHERE BankID = @id";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@id", movimentoBancario.IdReceiver);
+
+                command.Parameters.AddWithValue("@amount", movimentoBancario.Amount);
+
+
+                if (!(command.ExecuteNonQuery() > 0))
+                {
+                    connection.Close();
+                    return BadRequest("Erro ao atualizar saldo");
+                }
+
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return BadRequest(e.Message + e.StackTrace);
+            }
+
+            //regista movimento 
+
+            //emitir movimentos sender
+
+            movimentoBancario.Type = TypeOfMoviment.Debito;
+
+            Movimento movimento = new Movimento();
+            movimento.IdReceiver = movimentoBancario.IdReceiver;
+            movimento.IdSender = movimentoBancario.IdSender;
+            movimento.Type = movimentoBancario.Type;
+            movimento.Id = movimentoBancario.Id;
+            movimento.Amount = movimentoBancario.Amount;
+            movimento.Description = movimentoBancario.Description;
+            movimento.Date = movimentoBancario.Date;
+
+            link = String.Format("http://localhost:50766/api/movimentos");
+
+
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                HttpWebResponse response = null;
+                string result = JsonConvert.SerializeObject(movimento);
+
+                byte[] data = Encoding.ASCII.GetBytes(result);
+                request.ContentLength = data.Length;
+
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, result.Length);
+                }
+
+                response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+
+
+                    return BadRequest("Erro ao emitir nota - emitir movimento Api side");
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return BadRequest("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
+            }
+
+            return Ok("Depósito realizado com sucesso");
+        }
+
         [Route("pagamento")]
         [HttpPost]
         public IHttpActionResult PagamentoNaApp([FromBody] Movimento movimento)
         {
             //verificar sender
             SqlConnection connection = null;
+            User helper = null;
             try
             {
                 connection = new SqlConnection(connectionString);
@@ -115,10 +306,15 @@ namespace vCardPlatformAPI.Controllers
                 }
                 reader.Close();
                 connection.Close();
+                helper = sender;
 
                 if (sender == null)
                 {
-                    return Ok("Id sender não encontrado");
+                    return BadRequest("Elemento não encontrado");
+                }
+                if (sender.Balance < movimento.Amount)
+                {
+                    return BadRequest("Sender não tem dinheiro suficiente");
                 }
                
             }
@@ -129,7 +325,7 @@ namespace vCardPlatformAPI.Controllers
                     connection.Close();
                 }
 
-                return Ok(e.Message + e.StackTrace);
+                return BadRequest(e.Message + e.StackTrace);
             }
 
 
@@ -160,7 +356,11 @@ namespace vCardPlatformAPI.Controllers
 
                 if (receiver == null)
                 {
-                    return Ok("Id sender não encontrado");
+                    return BadRequest("Elemento não encontrado");
+                }
+                if (receiver.Id == helper.Id)
+                {
+                    return BadRequest("Sender e Receiver são a mesma pessoa");
                 }
             }
             catch (Exception e)
@@ -170,7 +370,7 @@ namespace vCardPlatformAPI.Controllers
                     connection.Close();
                 }
 
-                return Ok(e.Message + e.StackTrace);
+                return BadRequest(e.Message + e.StackTrace);
             }
 
             //update saldo sender
@@ -573,10 +773,7 @@ namespace vCardPlatformAPI.Controllers
             return Ok("Depósito realizado com sucesso");
         }
 
-
-
         [Route("trans")]
-
         [HttpPost]
         public IHttpActionResult Transferencia([FromBody] MovimentoBancario movimento)
         {
@@ -591,6 +788,10 @@ namespace vCardPlatformAPI.Controllers
 
             //TODO check other variables
             //check user_sender
+            if (movimento.Amount<0)
+            {
+                return BadRequest("Transferencia não pode ser negativa");
+            }
 
             //get bank
 
@@ -641,6 +842,15 @@ namespace vCardPlatformAPI.Controllers
                 var serializer = new JavaScriptSerializer();
 
                 contaSender = (ContaBankSide)serializer.Deserialize(strResul, typeof(ContaBankSide));
+
+                if (contaSender.Balance <0)
+                {
+                    return BadRequest("Sender não tem dinheiro");
+                }
+                if (contaSender.Balance < movimento.Amount)
+                {
+                    return BadRequest("Sender não tem dinheiro suficiente");
+                }
             }
             catch (Exception ex)
             {
