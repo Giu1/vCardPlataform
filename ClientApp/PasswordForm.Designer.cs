@@ -73,6 +73,7 @@ namespace ClientApp
             this.Controls.Add(this.button2);
             this.Name = "PasswordForm";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.PasswordForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

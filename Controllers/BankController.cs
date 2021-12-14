@@ -109,7 +109,7 @@ namespace vCardPlatform.Controllers
                 return Ok();
             }
 
-            return NotFound();
+            return Ok("Erro - Update");
         }
     }
 }

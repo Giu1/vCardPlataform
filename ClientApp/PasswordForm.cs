@@ -58,5 +58,10 @@ namespace ClientApp
                 return sb.ToString();
             }
         }
+
+        private void PasswordForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

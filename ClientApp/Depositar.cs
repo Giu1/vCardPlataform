@@ -26,7 +26,7 @@ namespace ClientApp
             InitializeComponent();
             this.authUser = conta;
 
-            string link = String.Format("https://localhost:44360/bank_1/conta/" + conta.BankId);
+            string link = String.Format("https://localhost:44360/conta/" + conta.BankId);
 
             ContaBankSide obj = null;
 
