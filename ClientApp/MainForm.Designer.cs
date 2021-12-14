@@ -37,10 +37,10 @@ namespace ClientApp
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -99,6 +99,7 @@ namespace ClientApp
             // 
             this.richTextBox1.Location = new System.Drawing.Point(343, 56);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(414, 323);
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
@@ -124,15 +125,6 @@ namespace ClientApp
             this.label3.TabIndex = 7;
             this.label3.Text = "Movimentos:";
             this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(197, 334);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(127, 45);
-            this.button4.TabIndex = 8;
-            this.button4.Text = "Realizar Transferência";
-            this.button4.UseVisualStyleBackColor = true;
             // 
             // button5
             // 
@@ -163,15 +155,25 @@ namespace ClientApp
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(197, 134);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(127, 45);
+            this.button7.TabIndex = 12;
+            this.button7.Text = "Pagamento com vCard";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.richTextBox1);
@@ -199,9 +201,9 @@ namespace ClientApp
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
     }
 }

@@ -17,11 +17,11 @@ namespace ClientApp
 {
     public partial class Pagamento : Form
     {
-        private User conta;
+        private User AuthUser;
         public Pagamento(User conta)
         {
             InitializeComponent();
-            this.conta = conta;
+            this.AuthUser = conta;
         }
 
         private void Pagamento_Load(object sender, EventArgs e)
@@ -31,22 +31,40 @@ namespace ClientApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string link = String.Format("http://localhost:50766/api/movimento/pagamento");
+            string link = String.Format("http://localhost:50766/api/movimentos/pagamento");
 
             vCardPlatform.Models.MovimentoBancario movimentoBancario = new vCardPlatform.Models.MovimentoBancario();
 
-            movimentoBancario.IdSender = conta.Id + "";
+            movimentoBancario.IdSender = AuthUser.Id + "";
             movimentoBancario.IdReceiver = textBox1.Text;
-            movimentoBancario.Amount = float.Parse(textBox2.Text);
+            movimentoBancario.BankRefReceiver = textBox2.Text;
+            try
+            {
+                movimentoBancario.Amount = float.Parse(textBox2.Text);
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Erro - Por favor inserir um numero");
+            }
+            
+            string helper;
+
+            PasswordForm frm = new PasswordForm(AuthUser);
+            if (frm.ShowDialog() != DialogResult.OK)
+            {
+                // The user canceled.
+                this.Close();
+            }
 
             try
             {
                 WebRequest request = WebRequest.Create(link);
                 request.Method = "POST";
                 request.ContentType = "application/json";
-                HttpWebResponse response = null;
+                
                 string result = JsonConvert.SerializeObject(movimentoBancario);
-
+                HttpWebResponse response = null;
                 byte[] data = Encoding.ASCII.GetBytes(result);
                 request.ContentLength = data.Length;
 
@@ -59,15 +77,24 @@ namespace ClientApp
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    char[] charsToTrim = { '"', '\'' };
                     this.DialogResult = DialogResult.OK;
-                    MessageBox.Show("Alterações realizadas com sucesso");
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        MessageBox.Show(responseText.Trim(charsToTrim));
+                    }
+
                     return;
                 }
+
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Utilizador não encontrado." + ex.Message + "\n" + ex.StackTrace);
+                
+                MessageBox.Show("Erro: " + ex.Message + "\n" + ex.InnerException);
 
                 return;
             }

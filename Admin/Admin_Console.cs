@@ -1,28 +1,35 @@
 ﻿using Admin;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
-
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
+using vCardPlatformAPI.Models;
 
 namespace AdminConsole
 {
     public partial class Admin_Console : Form
     {
         //MqttClient broker;
-        string[] Entities = { "Bank 1", "Bank 2", "MBWay" };
+        string[] Entities = { "Bank 1"};
+        string[] EntIp = { };
+        String[] curBank = { };
+        int setvalueindex = -1;
+        int index = -1;
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
+        MqttClient broker;
         String[] FilterTypes = { "By Bank", "By Transfer Type", "By Time", "By Balance" };
-        String[] FilterBank = { "Bank 1", "Bank 2", "MBWay " };
-        String[] FilterTransfer = { "Withdraw", "Deposit", "Payment" };
+        String[] FilterTransfer = { "Credito","Debito" };
         String[] FilterTime = { "1 Week", "1 month", "6 months", "1 Year" };
         String[] FilterBalance = { "Most Money", "Least Money" };
         String localhost = "127.0.0.1";
-
+        AdminAccount User = Global.CurrentUser;
         //Change String
         public string changeID { get; set; }
 
@@ -31,29 +38,32 @@ namespace AdminConsole
             InitializeComponent();
             listBox1.Items.AddRange(Entities);
             comboBoxFiltro.DataSource = FilterTypes;
+           
         }
 
-        private void button16_Click(object sender, EventArgs e)
+        private void button16_Click(object sender, EventArgs e) //Btn Logout
         {
+            //broker.Disconnect();
+            //base.OnClosed(e);
             Form login = new LoginForm();
             login.Show();
             Form consolehere = this;
-            consolehere.Hide();
+            consolehere.Close();
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            //ConnectMosquitto();
+            ConnectMosquitto();
             //RequestAllOperations();
 
         }
         private void ConnectMosquitto()
         {
-            /* broker = new MqttClient(localhost);
+             broker = new MqttClient(localhost);
              try
              {
-
-                 broker.Connect(Guid.NewGuid().ToString());
+                broker.MqttMsgPublishReceived += broker_MqttMsgPublishReceived;
+                broker.Connect(Guid.NewGuid().ToString());
                  if (!broker.IsConnected)
                  {
                      Console.WriteLine("Error connecting to message broker...");
@@ -65,31 +75,174 @@ namespace AdminConsole
              catch (Exception)
              {
                  MessageBox.Show("Verifique a disponibilidade do broker");
-             }*/
+             }
         }
+
+        private void broker_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void RequestAllOperations()
         {
+            String[] s = { "Feed" };
+            broker.Subscribe(s, qosLevels);
+            MessageBox.Show("Subscribed to Feed Succefully");
+            GetFeed();
             // TO DO
         }
 
+      
         private void button17_Click(object sender, EventArgs e)
         {
+            broker.Disconnect();
+            base.OnClosed(e);
             Application.Exit();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)  //Btn Ping Bank
         {
             // Ping API by ID / or Ping All  Get
             // Get Bank Values for Setting   Get
+            index = listBox1.SelectedIndex;
+            string link = EntIp[index];
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "GET";
+                HttpWebResponse response = null;
+                response = (HttpWebResponse)request.GetResponse();
+
+
+                String strResul = null;
+                using (Stream stream = response.GetResponseStream())
+                {
+
+                    StreamReader reader = new StreamReader(stream);
+                    strResul = reader.ReadToEnd();
+                    reader.Close();
+                }
+
+                var serializer = new JavaScriptSerializer();
+
+                curBank = (String[])serializer.Deserialize(strResul, typeof(String[]));
+                MessageBox.Show("Sucesso\n Banco ID: "+curBank[0]+" Credito Maximo = "+curBank[1]+ "Debito Maximo = "+curBank[2] );
+                textBox1.Text = curBank[1];
+                textBox2.Text = curBank[2];
+                setvalueindex = index;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao Pingar Banco: "+Entities[index]+"\n Verificar End Point\n" + ex.Message + "\n" + ex.StackTrace);
+
+                return;
+            }
+
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            
+            UpdateBankValues(setvalueindex);
+            // Set Value of Banks Post
+
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            // Get da API com Parametros de Procura / Routes Diferentes para filtros inicais diferentes maybe
+            // Mosquitto connects and publishes to either new channel or same channel with cleaned UI
+            // Clean and Write on Console Field
+        }
+
+        private void button5_Click(object sender, EventArgs e)  // Btn Change 1
+        {
+            changeID = "1";
+            Change(changeID);
+        }
+        private void Change(String x)  // Func Change
+        {
+            Form change = new ChangeXForm(x);
+            change.Show();
+            Form console = this;
+            console.Close();
+        }
+
+        private void AdminConsole_Load(object sender, EventArgs e)
+        {
+            label3.Text = "Welcome : " + User.Nome;
+            List<String> list = new List<String>();
+            list.Add("https://localhost:44360/bank_1/bank/");
+            EntIp = list.ToArray();
+        }
+
+        private void button6_Click(object sender, EventArgs e)  // Btn Change 2
+        {
+            changeID = "2";
+            Change(changeID);
+        }
+
+        private void button4_Click(object sender, EventArgs e)  // Btn Change 3
+        {
+            changeID = "3";
+            Change(changeID);
+        }
+
+        private void button2_Click(object sender, EventArgs e)  // Btn Change 4
+        {
+            changeID = "4";
+            Change(changeID);
+        }
+
+        private void button3_Click(object sender, EventArgs e)  // Btn Change 5
+        {
+            changeID = "5";
+            Change(changeID);
+        }
+
+        private void button7_Click(object sender, EventArgs e)  // Btn Create Admin
+        {
+            // Creation Form 
+            Form console = this;
+            console.Close();
+            Form create = new Admin_Create();
+            create.Show();
+        }
+
+        private void button9_Click(object sender, EventArgs e)  // Btn Change 6
+        {
+            changeID = "6";
+            Change(changeID);
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxFiltro_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)     // Btn Filtar 1º Tipo
         {
             String choice = comboBoxFiltro.SelectedItem as String;
             switch (choice)
             {
                 case "By Bank":
-                    comboBoxParametros.DataSource = FilterBank;
+                    comboBoxParametros.DataSource = Entities;
                     break;
                 case "By Transfer Type":
                     comboBoxParametros.DataSource = FilterTransfer;
@@ -103,78 +256,116 @@ namespace AdminConsole
             }
         }
 
-        private void button10_Click(object sender, EventArgs e)
-        {
-
-            // Set Value of Banks Post
-
-        }
-
-        private void button13_Click(object sender, EventArgs e)
-        {
-            // Get da API com Parametros de Procura / Routes Diferentes para filtros inicais diferentes maybe
-            // Mosquitto connects and publishes to either new channel or same channel with cleaned UI
-            // Clean and Write on Console Field
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            changeID = "1";
-            Change(changeID);
-        }
-        private void Change(String x)
-        {
-            Form change = new ChangeXForm(x);
-            change.Show();
-        }
-
-        private void AdminConsole_Load(object sender, EventArgs e)
+        private void label12_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void button8_Click(object sender, EventArgs e)      // Btn adicionar banco
         {
-            changeID = "2";
-            Change(changeID);
+            if (textBox3.Text != "")
+            {
+                if(textBox4.Text != "")
+                {
+                    List<String> list = new List<String>();
+                    List<String> ends = new List<String>();
+                    list = Entities.ToList<string>();
+                    ends = EntIp.ToList<string>();
+                    string newBank = textBox3.Text;
+                    string newEnd = "http://localhost:44360/" + textBox4.Text + "/";
+                    // Fazer checks de qualidade de data TO DO
+
+                    list.Add(newBank);
+                    ends.Add(newEnd);
+
+                    Entities = list.ToArray();
+                    EntIp = ends.ToArray();
+                    MessageBox.Show("Sucesso A Adicionar Banco");
+                    listBox1.Items.Clear();
+                    listBox1.Items.AddRange(Entities);
+                }
+                else { MessageBox.Show("Erro : Insira EndPoint Para Banco"); }
+            }
+            else { MessageBox.Show("Erro : Insira Nome Para Banco"); }
+           
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void UpdateBankValues(int index)
         {
-            changeID = "3";
-            Change(changeID);
+            if (index>=0)
+            {
+                try
+                {
+                    string link = EntIp[index] + "update/";
+                    curBank[1] = textBox1.Text;
+                    curBank[2] = textBox2.Text;
+                    
+                    WebRequest request = WebRequest.Create(link);
+                    request.Method = "PUT";
+                    request.ContentType = "application/json";
+                    HttpWebResponse response = null;
+                    string result = JsonConvert.SerializeObject(curBank);
+
+                    byte[] data = Encoding.ASCII.GetBytes(result);
+                    request.ContentLength = data.Length;
+
+                    using (Stream stream = request.GetRequestStream())
+                    {
+                        stream.Write(data, 0, result.Length);
+                    }
+
+                    response = (HttpWebResponse)request.GetResponse();
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        this.DialogResult = DialogResult.OK;
+                        MessageBox.Show("Alterações realizadas com sucesso");
+                        textBox1.Text = curBank[1];
+                        textBox2.Text = curBank[2];
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao modificar valores de banco\n" + ex.Message + "\n" + ex.StackTrace);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Selecione e Pinge um Banco Primeiro");
+                return;
+            }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button19_Click(object sender, EventArgs e)
         {
-            changeID = "4";
-            Change(changeID);
+            listBox2.Text = "";
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            changeID = "5";
-            Change(changeID);
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            // Creation Form 
-        }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-            changeID = "6";
-            Change(changeID);
-        }
-
-        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void button18_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void GetFeed()
         {
+            string link = String.Format("http://localhost:50766/api/admin/feed/");
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "GET";
+                HttpWebResponse response = null;
+
+                response = (HttpWebResponse)request.GetResponse();
+                MessageBox.Show("Done");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro: Ao buscar o feed" + ex.Message + ex.StackTrace);
+
+                return;
+            }
 
         }
     }

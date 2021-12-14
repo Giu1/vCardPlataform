@@ -27,7 +27,7 @@ namespace ClientApp
             InitializeComponent();
             this.authUser = conta;
 
-            string link = String.Format("https://localhost:44360/bank_1/conta/" + conta.BankId);
+            string link = String.Format("https://localhost:44360/conta/" + conta.BankId);
 
             ContaBankSide obj = null;
 
@@ -64,12 +64,11 @@ namespace ClientApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //emitir movimento bank side
+            //emitir pagamento incluindo bank side
 
+            string link = String.Format("http://localhost:50766/api/movimentos/levantar");
 
-            string link = String.Format("http://localhost:50766/api/movimentos/depositar");
-
-            vCardPlatform.Models.MovimentoBancario registoNoBanco = new vCardPlatform.Models.MovimentoBancario();
+            MovimentoBancario registoNoBanco = new MovimentoBancario();
 
             try
             {
@@ -80,10 +79,10 @@ namespace ClientApp
                 MessageBox.Show(ex.Message);
                 return;
             }
-            
-            
-            registoNoBanco.IdSender = authUser.BankId;
-            registoNoBanco.BankRefSender = authUser.BankRef;
+
+
+            registoNoBanco.IdReceiver = authUser.BankId;
+            registoNoBanco.BankRefReceiver = authUser.BankRef;
 
 
             try
@@ -123,7 +122,12 @@ namespace ClientApp
                 return;
             }
 
-           
+
+        }
+
+        private void Levantar_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -26,7 +26,7 @@ namespace ClientApp
             InitializeComponent();
             this.authUser = conta;
 
-            string link = String.Format("https://localhost:44360/bank_1/conta/" + conta.BankId);
+            string link = String.Format("https://localhost:44360/conta/" + conta.BankId);
 
             ContaBankSide obj = null;
 
@@ -69,7 +69,7 @@ namespace ClientApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //emitir movimento bank side
+            //emitir pagamento incluindo bank side
 
             string link = String.Format("http://localhost:50766/api/movimentos/depositar");
 

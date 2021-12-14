@@ -10,7 +10,7 @@ using vCardPlatform.Models;
 
 namespace vCardPlatform.Controllers
 {
-    [RoutePrefix("bank_1/conta")]
+    [RoutePrefix("conta")]
     public class ContaController : ApiController
     {
 
@@ -52,7 +52,7 @@ namespace vCardPlatform.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok("Erro - Id nao encontrado");
                 }
             }
             catch (Exception e)
@@ -103,7 +103,7 @@ namespace vCardPlatform.Controllers
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok("Erro - Nao existem elementos nesta colecao");
                 }
             }
             catch (Exception e)
@@ -152,7 +152,7 @@ namespace vCardPlatform.Controllers
                     return Ok();
                 }
 
-                return NotFound();
+                return Ok("Erro - Id nao encontrado");
 
             }
             catch (Exception e)
@@ -162,7 +162,7 @@ namespace vCardPlatform.Controllers
                     connection.Close();
                 }
 
-                return Ok(e.Message + e.StackTrace); ;
+                return Ok(e.Message + e.StackTrace); 
             }
 
         }
@@ -190,17 +190,17 @@ namespace vCardPlatform.Controllers
                     return Ok();
                 }
 
-                return NotFound();
+                return Ok("Erro - Id nao encontrado");
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 if (connection.State == System.Data.ConnectionState.Open)
                 {
                     connection.Close();
                 }
 
-                return NotFound();
+                return Ok(e.Message + e.StackTrace);
             }
         }
 
@@ -296,7 +296,7 @@ namespace vCardPlatform.Controllers
                     return Ok();
                 }
 
-                return NotFound();
+                return Ok("Erro - Id nao encontrado");
 
             }
             catch (Exception e)
