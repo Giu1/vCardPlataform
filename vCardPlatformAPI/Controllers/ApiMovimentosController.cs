@@ -77,7 +77,7 @@ namespace vCardPlatformAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("Elemento não encontrado");
+                    return Ok("Erro - Id não encontrado");
                 }
             }
             catch (Exception e)
@@ -183,7 +183,7 @@ namespace vCardPlatformAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("Erro um movimento não tem valores negativos.");
+                    return Ok("Erro um movimento não tem valores negativos.");
                 }
                 command.Parameters.Add(new SqlParameter("@f", string.IsNullOrEmpty(movimento.Description) ? (object)DBNull.Value : movimento.Description));
                 string aqui = movimento.Type.ToString();
@@ -309,7 +309,7 @@ namespace vCardPlatformAPI.Controllers
 
             
             movimento.IdReceiver = movimentoBancario.IdReceiver;
-            movimento.IdSender = movimentoBancario.IdSender;
+            
             movimento.Type = movimentoBancario.Type;
             movimento.Id = movimentoBancario.Id;
             movimento.Amount = movimentoBancario.Amount;
@@ -345,14 +345,16 @@ namespace vCardPlatformAPI.Controllers
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
 
-                return new HttpActionResult(HttpStatusCode.InternalServerError, ex.Message + "\n" + ex.StackTrace);
+                 
+
+                return Ok(e.Message + e.StackTrace);
                 //return BadRequest("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
             }
 
-            return new HttpActionResult(HttpStatusCode.OK, "Depósito realizado com sucesso");
+            return Ok("Sucesso");
             //return Ok("Depósito realizado com sucesso");
         }
 
@@ -389,11 +391,11 @@ namespace vCardPlatformAPI.Controllers
 
                 if (sender == null)
                 {
-                    return BadRequest("Erro - Id não encontrado");
+                    return Ok("Erro - Id não encontrado");
                 }
                 if (sender.Balance < movimento.Amount)
                 {
-                    return BadRequest("Sender nao tem dinheiro suficiente");
+                    return Ok("Sender nao tem dinheiro suficiente");
                 }
                
             }
@@ -404,7 +406,7 @@ namespace vCardPlatformAPI.Controllers
                     connection.Close();
                 }
 
-                return BadRequest(e.Message + e.StackTrace);
+                return Ok(e.Message + e.StackTrace);
             }
 
 
@@ -448,7 +450,7 @@ namespace vCardPlatformAPI.Controllers
                     connection.Close();
                 }
 
-                return BadRequest(e.Message + e.StackTrace);
+                return Ok(e.Message + e.StackTrace);
             }
 
             //update saldo sender
@@ -466,7 +468,7 @@ namespace vCardPlatformAPI.Controllers
                 if (!(command.ExecuteNonQuery() > 0))
                 {
                     connection.Close();
-                    return BadRequest("Erro ao atualizar saldo");
+                    return Ok("Erro ao atualizar saldo");
                 }
                 connection.Close();
             }
@@ -496,7 +498,7 @@ namespace vCardPlatformAPI.Controllers
                 if (!(command.ExecuteNonQuery() > 0))
                 {
                     connection.Close();
-                    return BadRequest("Erro ao atualizar saldo");
+                    return Ok("Erro ao atualizar saldo");
                 }
                 connection.Close();
             }
@@ -666,7 +668,7 @@ namespace vCardPlatformAPI.Controllers
                 if (!(command.ExecuteNonQuery() > 0))
                 {
                     connection.Close();
-                    return BadRequest("Erro ao atualizar saldo");
+                    return Ok("Erro ao atualizar saldo");
                 }
 
             }
@@ -794,7 +796,7 @@ namespace vCardPlatformAPI.Controllers
                 if (!(command.ExecuteNonQuery() > 0))
                 {
                     connection.Close();
-                    return BadRequest("Erro ao atualizar saldo");
+                    return Ok("Erro - Id não encontrado");
                 }
                 
             }

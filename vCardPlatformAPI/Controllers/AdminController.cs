@@ -14,7 +14,7 @@ using vCardPlatformAPI.Models;
 namespace vCardPlatformAPI.Controllers
 {
     [RoutePrefix("api/admin")]
-    public class AdminImportartanteController : ApiController
+    public class AdminController : ApiController
     {
         String[] Accounts = { };
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ProductsApp.Properties.Settings.ConnectionToDB"].ConnectionString;
