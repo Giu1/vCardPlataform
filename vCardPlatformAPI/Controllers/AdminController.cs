@@ -242,7 +242,7 @@ namespace vCardPlatformAPI.Controllers
 
             SqlConnection connection = null;
             SqlCommand command = null;
-            SqlDataReader reader = null;
+            
             
             connection = null;
             try
@@ -287,7 +287,7 @@ namespace vCardPlatformAPI.Controllers
 
             SqlConnection connection = null;
             SqlCommand command = null;
-            SqlDataReader reader = null;
+            
 
             connection = null;
             try
@@ -332,7 +332,7 @@ namespace vCardPlatformAPI.Controllers
 
             SqlConnection connection = null;
             SqlCommand command = null;
-            SqlDataReader reader = null;
+            
 
             connection = null;
             try
@@ -377,7 +377,7 @@ namespace vCardPlatformAPI.Controllers
 
             SqlConnection connection = null;
             SqlCommand command = null;
-            SqlDataReader reader = null;
+            
 
             connection = null;
             try
@@ -533,7 +533,7 @@ namespace vCardPlatformAPI.Controllers
                 return current;
                 
             }
-            catch (Exception e)
+            catch (Exception )
             {
                 if (connection.State == System.Data.ConnectionState.Open)
                 {

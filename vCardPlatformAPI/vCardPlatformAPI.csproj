@@ -93,15 +93,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AdminImportartanteController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ApiMovimentosController.cs" />
     <Compile Include="Controllers\ContasController.cs" />
+    <Compile Include="Controllers\BanksController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AdminAccount.cs" />
-    <Compile Include="Models\HttpActionResult.cs" />
-    <Compile Include="Models\Movimento.cs" />
+    <Compile Include="Models\Bank.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserBankSide.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -48,7 +48,7 @@ namespace ClientApp
                 MessageBox.Show("Erro - Por favor inserir um numero");
             }
             
-            string helper;
+            
 
             PasswordForm frm = new PasswordForm(AuthUser);
             if (frm.ShowDialog() != DialogResult.OK)

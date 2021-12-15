@@ -49,7 +49,7 @@ namespace ClientApp
                 return;
             }
             
-            string helper;
+            
             HttpWebResponse response = null;
             try
             {

@@ -159,7 +159,7 @@ namespace vCardPlatformAPI.Controllers
 
         [Route("")]
         [HttpPost]
-        public IHttpActionResult RegistarMovimentos([FromBody] Movimento movimento)
+        public IHttpActionResult RegistarMovimentos([FromBody] MovimentoBancario movimento)
         {
             SqlConnection connection = null;
             connection = new SqlConnection(connectionString);
@@ -171,11 +171,13 @@ namespace vCardPlatformAPI.Controllers
             try
             {
 
-                cmdSQL = "INSERT INTO Movimentos(Id,Id_Sender,Id_Receiver,Amount,Description,Date,Type) VALUES (@z,@a,@c,@e,@f,@g,@h)";
+                cmdSQL = "INSERT INTO Movimentos(Id,Id_Sender,Id_Bank_Sender,Id_Receiver,Id_Bank_Receiver,Amount,Description,Date,Type) VALUES (@z,@a,@b,@c,@d,@e,@f,@g,@h)";
                 command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@z", DateTime.Now.Ticks + "");
                 command.Parameters.AddWithValue("@a", movimento.IdSender);
+                command.Parameters.Add(new SqlParameter("@b", string.IsNullOrEmpty(movimento.BankRefSender) ? (object)DBNull.Value : movimento.BankRefSender));
                 command.Parameters.AddWithValue("@c", movimento.IdReceiver);
+                command.Parameters.Add(new SqlParameter("@d", string.IsNullOrEmpty(movimento.BankRefReceiver) ? (object)DBNull.Value : movimento.BankRefReceiver));
 
                 if (movimento.Amount > 0)
                 {
@@ -217,7 +219,7 @@ namespace vCardPlatformAPI.Controllers
         [HttpPost]
         public IHttpActionResult Comprar([FromBody] MovimentoBancario movimentoBancario)
         {
-            Movimento movimento = new Movimento();
+            MovimentoBancario movimento = new MovimentoBancario();
             movimento.IdSender = movimentoBancario.IdSender;
             movimentoBancario.IdSender = "1111111111111"; //referencia para conta do banco da plataforma
             movimentoBancario.BankRefSender = "44360";
@@ -244,22 +246,26 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                string responseText;
-                using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                //depura erros 
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                     responseText = reader.ReadToEnd();
+                    char[] charsToTrim = { '"', '\'' };
                     
-                }
 
-                if (responseText != "Suceesso")
-                {
-                    return Ok(responseText);
-                }
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
+                }    
             }
             catch (Exception ex)
             {
 
-                return new HttpActionResult(HttpStatusCode.InternalServerError, ex.Message + "\n" +ex.StackTrace);
+                return Ok(ex.Message + "\n" +ex.StackTrace);
                 //return Ok("Erro ao emitir nota - emitir movimento bank side" + ex.Message + "\n" + ex.StackTrace);
             }
 
@@ -268,7 +274,8 @@ namespace vCardPlatformAPI.Controllers
             SqlConnection connection = null;
             SqlCommand command = null;
 
-
+            
+            
             connection = null;
             try
             {
@@ -276,7 +283,7 @@ namespace vCardPlatformAPI.Controllers
                 connection.Open();
 
 
-                string cmdSQL = "UPDATE Contas set Balance=Balance - @amount WHERE BankID = @id";
+                string cmdSQL = "UPDATE Contas set Balance=Balance - @amount WHERE PhoneNumber = @id";
                 command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@id", movimento.IdSender);
 
@@ -305,16 +312,12 @@ namespace vCardPlatformAPI.Controllers
 
             //emitir movimentos sender
 
-            movimentoBancario.Type = TypeOfMoviment.Debito;
-
-            
+            movimento.Type = TypeOfMoviment.Debito;
             movimento.IdReceiver = movimentoBancario.IdReceiver;
-            
-            movimento.Type = movimentoBancario.Type;
-            movimento.Id = movimentoBancario.Id;
             movimento.Amount = movimentoBancario.Amount;
-            movimento.Description = movimentoBancario.Description;
+            movimento.BankRefReceiver = movimentoBancario.BankRefReceiver;
             movimento.Date = movimentoBancario.Date;
+
 
             link = String.Format("http://localhost:50766/api/movimentos");
 
@@ -337,18 +340,25 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                //depura erros 
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    char[] charsToTrim = { '"', '\'' };
 
-                    return Ok("Erro ao emitir nota de credito");
-                    //return BadRequest("Erro ao emitir nota - emitir movimento Api side");
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
                 }
 
             }
             catch (Exception e)
             {
-
-                 
 
                 return Ok(e.Message + e.StackTrace);
                 //return BadRequest("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
@@ -360,7 +370,7 @@ namespace vCardPlatformAPI.Controllers
 
         [Route("pagamento")]
         [HttpPost]
-        public IHttpActionResult PagamentoNaApp([FromBody] Movimento movimento)
+        public IHttpActionResult PagamentoNaApp([FromBody] MovimentoBancario movimento)
         {
             //verificar sender
             SqlConnection connection = null;
@@ -612,7 +622,7 @@ namespace vCardPlatformAPI.Controllers
         public IHttpActionResult Levantar([FromBody] MovimentoBancario movimentoBancario)
         {
             movimentoBancario.IdSender = "1111111111111"; //referencia para conta do banco da plataforma
-            movimentoBancario.BankRefSender = "1111";
+            movimentoBancario.BankRefSender = "44360";
 
             string link = String.Format("http://localhost:50766/api/movimentos/trans");
 
@@ -636,7 +646,20 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    char[] charsToTrim = { '"', '\'' };
 
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
+                }
 
             }
             catch (Exception ex)
@@ -688,7 +711,7 @@ namespace vCardPlatformAPI.Controllers
 
             movimentoBancario.Type = TypeOfMoviment.Debito;
 
-            Movimento movimento = new Movimento();
+            MovimentoBancario movimento = new MovimentoBancario();
             movimento.IdReceiver = movimentoBancario.IdReceiver;
             movimento.IdSender = movimentoBancario.IdSender;
             movimento.Type = movimentoBancario.Type;
@@ -718,11 +741,19 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    char[] charsToTrim = { '"', '\'' };
 
 
-                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
                 }
 
             }
@@ -733,14 +764,14 @@ namespace vCardPlatformAPI.Controllers
                 return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
             }
 
-            return Ok("Depósito realizado com sucesso");
+            return Ok("Sucesso");
         }
         [Route("depositar")]
         [HttpPost]
         public IHttpActionResult Depositar([FromBody]MovimentoBancario movimentoBancario)
         {
             movimentoBancario.IdReceiver = "1111111111111"; //referencia para conta do banco da plataforma
-            movimentoBancario.BankRefReceiver = "1111";
+            movimentoBancario.BankRefReceiver = "44360";
 
             string link = String.Format("http://localhost:50766/api/movimentos/trans");
 
@@ -764,7 +795,20 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    char[] charsToTrim = { '"', '\'' };
+
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
+                }
 
             }
             catch (Exception ex)
@@ -818,7 +862,7 @@ namespace vCardPlatformAPI.Controllers
             
             movimentoBancario.Type = TypeOfMoviment.Debito;
 
-            Movimento movimento = new Movimento();
+            MovimentoBancario movimento = new MovimentoBancario();
             movimento.IdReceiver = movimentoBancario.IdReceiver;
             movimento.IdSender = movimentoBancario.IdSender;
             movimento.Type = movimentoBancario.Type;
@@ -849,11 +893,19 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    char[] charsToTrim = { '"', '\'' };
 
 
-                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
                 }
 
             }
@@ -864,7 +916,7 @@ namespace vCardPlatformAPI.Controllers
                 return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
             }
 
-            return Ok("Depósito realizado com sucesso");
+            return Ok("Sucesso");
         }
 
         [Route("trans")]
@@ -872,12 +924,17 @@ namespace vCardPlatformAPI.Controllers
         public IHttpActionResult Transferencia([FromBody] MovimentoBancario movimento)
         {
 
-            SqlConnection connection = null;
-            SqlCommand command = null;
+            
+            
             string link = null;
             ContaBankSide contaSender = null;
             ContaBankSide contaReciever = null;
-            
+            SqlConnection connection = null;
+            SqlCommand command = null;
+            string readerBankReceiver = null;
+            string readerBankSender = null;
+
+
 
             //TODO check other variables
             //check user_sender
@@ -886,10 +943,36 @@ namespace vCardPlatformAPI.Controllers
                 return Ok("Transferencia não pode ser negativa");
             }
 
-           
+            //get bank Sender
+
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT NAME FROM Banks WHERE ID=@idPedidosTable";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", movimento.BankRefSender);
+
+                readerBankSender = (string)command.ExecuteScalar();
+
+                if (readerBankSender == null)
+                {
+                    if (connection.State == System.Data.ConnectionState.Open)
+                    {
+                        connection.Close();
+                    }
+                    return Ok("Erro BnkRefSender inválido");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("IDSender not found" + ex.Message);
+            }
+
+
 
             //get conta sender
-            string linkSave = String.Format("https://localhost:"+movimento.BankRefSender+"/conta/"+movimento.IdSender);
+            string linkSave = String.Format("https://localhost:"+movimento.BankRefSender+"/"+readerBankSender+"/conta/"+movimento.IdSender);
             try
             {
                 WebRequest requestPassword = WebRequest.Create(linkSave);
@@ -931,11 +1014,36 @@ namespace vCardPlatformAPI.Controllers
 
             //check user_receiver
 
-          
+            //get bank Sender
 
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT NAME FROM Banks WHERE ID=@idPedidosTable";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", movimento.BankRefReceiver);
+
+                readerBankReceiver = (string)command.ExecuteScalar();
+
+                if (readerBankReceiver == null)
+                {
+                    if (connection.State == System.Data.ConnectionState.Open)
+                    {
+                        connection.Close();
+                    }
+                    return Ok("Erro BnkRefSender inválido");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("IDSender not found" + ex.Message);
+            }
+
+            
             //get conta receiver
 
-            link = String.Format("https://localhost:44360/" + movimento.BankRefReceiver + "/conta/" + movimento.IdReceiver);
+            link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/" + readerBankSender + "/conta/" + movimento.IdReceiver);
             try
             {
                 WebRequest requestPassword = WebRequest.Create(link);
@@ -982,7 +1090,7 @@ namespace vCardPlatformAPI.Controllers
 
             //update no balanço da conta do sender
 
-            link = String.Format("https://localhost:" + movimento.BankRefSender + "/conta/" + contaSender.Id);
+            link = String.Format("https://localhost:" + movimento.BankRefSender + "/" + readerBankSender + "/conta/" + movimento.IdSender);
 
             ContaBankSide obj = new ContaBankSide();
             obj.Id = contaSender.Id;
@@ -1005,10 +1113,19 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    
-                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+                    char[] charsToTrim = { '"', '\'' };
+
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
                 }
 
             }
@@ -1022,7 +1139,7 @@ namespace vCardPlatformAPI.Controllers
 
             //update no balanço da conta do reciever
 
-            link = String.Format("https://localhost:" + movimento.BankRefSender + "/conta/" + contaReciever.Id);
+            link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/" + readerBankReceiver + "/conta/" + movimento.IdReceiver);
 
             ContaBankSide obj2 = new ContaBankSide();
             obj2.Id = contaReciever.Id+"";
@@ -1045,10 +1162,19 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
+                    char[] charsToTrim = { '"', '\'' };
 
-                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            return Ok(responseText);
+                        }
+                    }
                 }
 
             }
@@ -1075,7 +1201,7 @@ namespace vCardPlatformAPI.Controllers
             registoNoBanco.Type = TypeOfMoviment.Debito;
             registoNoBanco.Amount = movimento.Amount;
 
-            link = String.Format("https://localhost:" + movimento.BankRefSender + "/movimentos");
+            link = String.Format("https://localhost:" + movimento.BankRefSender + "/" + readerBankSender + "/movimentos");
 
 
             try
@@ -1096,11 +1222,18 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    
-                    
-                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+                    char[] charsToTrim = { '"', '\'' };
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        String helper2 = responseText.Trim(charsToTrim);
+                        if (helper2.CompareTo("Sucesso") != 0)
+                        {
+                            return Ok(reader.ReadToEnd());
+                        }
+                    }
                 }
 
             }
@@ -1113,7 +1246,7 @@ namespace vCardPlatformAPI.Controllers
 
             //emitir movimentos reciever
 
-            link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/movimentos");
+            link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/" + readerBankReceiver + "/movimentos");
             registoNoBanco.Type = TypeOfMoviment.Credito;
 
             try
@@ -1134,11 +1267,22 @@ namespace vCardPlatformAPI.Controllers
 
                 response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
 
 
-                    return Ok("Erro ao emitir nota - emitir movimento Api side");
+                    char[] charsToTrim = { '"', '\'' };
+
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        String helper2 = responseText.Trim(charsToTrim);
+                        if (helper2.CompareTo("Sucesso") != 0)
+                        {
+                            return Ok(reader.ReadToEnd());
+                        }
+                    }
                 }
 
             }

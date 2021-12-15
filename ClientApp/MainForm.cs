@@ -66,7 +66,7 @@ namespace ClientApp
                 var serializer = new JavaScriptSerializer();
 
                 registos = (List<MovimentoBancario>)serializer.Deserialize(strResul, typeof(List<MovimentoBancario>));
-
+                this.richTextBox1.Text = "";
 
                 foreach (var item in registos)
                 {
@@ -81,7 +81,7 @@ namespace ClientApp
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 this.richTextBox1.Text = "Erro";

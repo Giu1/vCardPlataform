@@ -128,8 +128,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BankController.cs" />
-    <Compile Include="Controllers\ContaController.cs" />
-    <Compile Include="Controllers\BankMovimentosController.cs" />
+    <Compile Include="Controllers\Bank1ContaController.cs" />
+    <Compile Include="Controllers\Bank1MovimentosController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

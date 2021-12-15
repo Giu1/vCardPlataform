@@ -14,11 +14,13 @@ using System.Windows.Forms;
 using vCardPlatform.Models;
 using User = vCardPlatformAPI.Models.User;
 using ContaBankSide = vCardPlatform.Models.Conta;
+using System.Data.SqlClient;
 
 namespace ClientApp
 {
     public partial class Depositar : Form
     {
+        
         private User authUser;
         private ContaBankSide contaBank;
         public Depositar(User conta)
@@ -26,13 +28,49 @@ namespace ClientApp
             InitializeComponent();
             this.authUser = conta;
 
-            string link = String.Format("https://localhost:44360/conta/" + conta.BankId);
 
             ContaBankSide obj = null;
+            Bank obj2 = null;
 
+            //get bank Sender
+
+            string readerBank = null;
+
+            string linkSave = String.Format("http://localhost:50766/api/bank/"+conta.BankRef);
             try
             {
-                WebRequest requestPassword = WebRequest.Create(link);
+                WebRequest requestPassword = WebRequest.Create(linkSave);
+                requestPassword.Method = "GET";
+                HttpWebResponse responsePassword = null;
+
+                responsePassword = (HttpWebResponse)requestPassword.GetResponse();
+
+                String strResul = null;
+                using (Stream stream = responsePassword.GetResponseStream())
+                {
+
+                    StreamReader reader = new StreamReader(stream);
+                    strResul = reader.ReadToEnd();
+                    reader.Close();
+                }
+
+                var serializer = new JavaScriptSerializer();
+
+                obj2 = (Bank)serializer.Deserialize(strResul, typeof(Bank));
+                
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+
+
+            linkSave = String.Format("https://localhost:" + conta.BankRef + "/" + obj2.Name + "/conta/" + conta.BankId);
+            try
+            {
+                WebRequest requestPassword = WebRequest.Create(linkSave);
                 requestPassword.Method = "GET";
                 HttpWebResponse responsePassword = null;
 
@@ -110,12 +148,15 @@ namespace ClientApp
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    using (var stream = response.GetResponseStream())
-                    using (var reader = new StreamReader(stream))
-                    {
-                        MessageBox.Show(reader.ReadToEnd());
-                    }
+                    char[] charsToTrim = { '"', '\'' };
                     this.DialogResult = DialogResult.OK;
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        MessageBox.Show(responseText.Trim(charsToTrim));
+                    }
+
                     return;
                 }
 

@@ -16,7 +16,7 @@ namespace vCardPlatform
 
             config.Routes.MapHttpRoute(
                 name: "Bank1Api",
-                routeTemplate: "bank_1/{controller}/{id}",
+                routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }
