@@ -135,7 +135,7 @@ namespace vCardPlatformAPI.Controllers
 
                 reader.Close();
                 connection.Close();
-                if (movimentoBancarios.Count !=0)
+                if (movimentoBancarios.Count != 0)
                 {
                     return Ok(movimentoBancarios);
                 }
@@ -250,7 +250,7 @@ namespace vCardPlatformAPI.Controllers
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     char[] charsToTrim = { '"', '\'' };
-                    
+
 
                     using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
                     {
@@ -260,12 +260,12 @@ namespace vCardPlatformAPI.Controllers
                             return Ok(responseText);
                         }
                     }
-                }    
+                }
             }
             catch (Exception ex)
             {
 
-                return Ok(ex.Message + "\n" +ex.StackTrace);
+                return Ok(ex.Message + "\n" + ex.StackTrace);
                 //return Ok("Erro ao emitir nota - emitir movimento bank side" + ex.Message + "\n" + ex.StackTrace);
             }
 
@@ -274,8 +274,8 @@ namespace vCardPlatformAPI.Controllers
             SqlConnection connection = null;
             SqlCommand command = null;
 
-            
-            
+
+
             connection = null;
             try
             {
@@ -293,7 +293,7 @@ namespace vCardPlatformAPI.Controllers
                 if (!(command.ExecuteNonQuery() > 0))
                 {
                     connection.Close();
-                    
+
                     return Ok("Erro ao atualizar saldo - Não foi encontrada a referencia inserida");
                 }
 
@@ -304,7 +304,7 @@ namespace vCardPlatformAPI.Controllers
                 {
                     connection.Close();
                 }
-                return Ok("Erro ao atualizar saldo - ID Reciever"+ ex.Message + ex.StackTrace);
+                return Ok("Erro ao atualizar saldo - ID Reciever" + ex.Message + ex.StackTrace);
                 //return BadRequest(e.Message + e.StackTrace);
             }
 
@@ -407,7 +407,7 @@ namespace vCardPlatformAPI.Controllers
                 {
                     return Ok("Sender nao tem dinheiro suficiente");
                 }
-               
+
             }
             catch (Exception e)
             {
@@ -465,40 +465,14 @@ namespace vCardPlatformAPI.Controllers
 
             //update saldo sender
 
+
             //check if earnings supported
             connection = null;
 
-            bool supported = false;
-            try
+            int earning = SeachEarning(movimento.IdSender);
+            if (earning != 0)
             {
-                connection = new SqlConnection(connectionString);
-                connection.Open();
-                string cmdSQL = "SELECT * FROM EarningsSupported WHERE PhoneNumber=@id";
-                SqlCommand command = new SqlCommand(cmdSQL, connection);
-                command.Parameters.AddWithValue("@id", movimento.IdSender);
-                string id = (String) command.ExecuteScalar();
-
-                User receiver = null;
-
-                
-
-                if (command.ExecuteScalar() == null)
-                {
-                    return Ok("Erro - Id não encontrado");
-                }
-                if (receiver.Id == helper.Id)
-                {
-                    return Ok("Erro - Sender e Receiver teem o mesmo id");
-                }
-            }
-            catch (Exception e)
-            {
-                if (connection.State == System.Data.ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-
-                return Ok(e.Message + e.StackTrace);
+                movimento.Amount = movimento.Amount * (1 - (earning / 100));
             }
 
             connection = null;
@@ -539,7 +513,7 @@ namespace vCardPlatformAPI.Controllers
                 SqlCommand command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@amount", movimento.Amount);
                 command.Parameters.AddWithValue("@id", movimento.IdReceiver);
-              
+
 
                 if (!(command.ExecuteNonQuery() > 0))
                 {
@@ -590,11 +564,11 @@ namespace vCardPlatformAPI.Controllers
                     {
                         responseText = reader.ReadToEnd();
                     }
-                    if (responseText.CompareTo("\"Sucesso\"") !=0)
+                    if (responseText.CompareTo("\"Sucesso\"") != 0)
                     {
                         return Ok(responseText);
                     }
-                    
+
                 }
 
             }
@@ -804,7 +778,7 @@ namespace vCardPlatformAPI.Controllers
         }
         [Route("depositar")]
         [HttpPost]
-        public IHttpActionResult Depositar([FromBody]MovimentoBancario movimentoBancario)
+        public IHttpActionResult Depositar([FromBody] MovimentoBancario movimentoBancario)
         {
             movimentoBancario.IdReceiver = "1111111111111"; //referencia para conta do banco da plataforma
             movimentoBancario.BankRefReceiver = "44360";
@@ -849,15 +823,15 @@ namespace vCardPlatformAPI.Controllers
             }
             catch (Exception ex)
             {
-                
-                return Ok("Erro ao emitir nota - emitir movimento bank side" + ex.Message + "\n" + ex.StackTrace+" "+ex.InnerException);
+
+                return Ok("Erro ao emitir nota - emitir movimento bank side" + ex.Message + "\n" + ex.StackTrace + " " + ex.InnerException);
             }
-            
+
 
             //atualiza saldo na api
             SqlConnection connection = null;
             SqlCommand command = null;
-            
+
 
             connection = null;
             try
@@ -865,10 +839,10 @@ namespace vCardPlatformAPI.Controllers
                 connection = new SqlConnection(connectionString);
                 connection.Open();
 
-                
-                    string cmdSQL = "UPDATE Contas set Balance=Balance + @amount WHERE BankID = @id";
-                    command = new SqlCommand(cmdSQL, connection);
-                    command.Parameters.AddWithValue("@id", movimentoBancario.IdSender);
+
+                string cmdSQL = "UPDATE Contas set Balance=Balance + @amount WHERE BankID = @id";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@id", movimentoBancario.IdSender);
 
                 command.Parameters.AddWithValue("@amount", movimentoBancario.Amount);
 
@@ -878,7 +852,7 @@ namespace vCardPlatformAPI.Controllers
                     connection.Close();
                     return Ok("Erro - Id não encontrado");
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -895,7 +869,7 @@ namespace vCardPlatformAPI.Controllers
             //emitir movimentos sender
 
 
-            
+
             movimentoBancario.Type = TypeOfMoviment.Debito;
 
             MovimentoBancario movimento = new MovimentoBancario();
@@ -960,8 +934,8 @@ namespace vCardPlatformAPI.Controllers
         public IHttpActionResult Transferencia([FromBody] MovimentoBancario movimento)
         {
 
-            
-            
+
+
             string link = null;
             ContaBankSide contaSender = null;
             ContaBankSide contaReciever = null;
@@ -971,7 +945,7 @@ namespace vCardPlatformAPI.Controllers
             string readerBankSender = null;
 
             //check user_sender
-            if (movimento.Amount<0)
+            if (movimento.Amount < 0)
             {
                 return Ok("Transferencia não pode ser negativa");
             }
@@ -1005,7 +979,7 @@ namespace vCardPlatformAPI.Controllers
 
 
             //get conta sender
-            string linkSave = String.Format("https://localhost:"+movimento.BankRefSender+"/"+readerBankSender+"/conta/"+movimento.IdSender);
+            string linkSave = String.Format("https://localhost:" + movimento.BankRefSender + "/" + readerBankSender + "/conta/" + movimento.IdSender);
             try
             {
                 WebRequest requestPassword = WebRequest.Create(linkSave);
@@ -1027,9 +1001,9 @@ namespace vCardPlatformAPI.Controllers
 
                 contaSender = (ContaBankSide)serializer.Deserialize(strResul, typeof(ContaBankSide));
 
-                if (contaSender.Balance <0)
+                if (contaSender.Balance < 0)
                 {
-                    return Ok( "Sender não tem dinheiro");
+                    return Ok("Sender não tem dinheiro");
                     //return BadRequest();
                 }
                 if (contaSender.Balance < movimento.Amount)
@@ -1073,7 +1047,7 @@ namespace vCardPlatformAPI.Controllers
                 return Ok("IDSender not found" + ex.Message);
             }
 
-            
+
             //get conta receiver
 
             link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/" + readerBankSender + "/conta/" + movimento.IdReceiver);
@@ -1104,10 +1078,10 @@ namespace vCardPlatformAPI.Controllers
 
                     return Ok(strResul);
                 }
-                    
-                
-               
-                
+
+
+
+
             }
             catch (Exception ex)
             {
@@ -1175,7 +1149,7 @@ namespace vCardPlatformAPI.Controllers
             link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/" + readerBankReceiver + "/conta/" + movimento.IdReceiver);
 
             ContaBankSide obj2 = new ContaBankSide();
-            obj2.Id = contaReciever.Id+"";
+            obj2.Id = contaReciever.Id + "";
             obj2.Balance = contaReciever.Balance + movimento.Amount;
             try
             {
@@ -1272,9 +1246,9 @@ namespace vCardPlatformAPI.Controllers
             }
             catch (Exception ex)
             {
-                
 
-                return Ok("Erro ao emitir nota - emitir movimento Api side "+ex.Message+"\n"+ex.StackTrace);
+
+                return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
             }
 
             //emitir movimentos reciever
@@ -1331,7 +1305,7 @@ namespace vCardPlatformAPI.Controllers
         }
 
         //verifica se o vcard suporta earning e devolve a percentagem
-        public int SeachEarning(int id)
+        public int SeachEarning(string id)
         {
             SqlConnection connection = null;
             SqlCommand command = null;
@@ -1364,6 +1338,6 @@ namespace vCardPlatformAPI.Controllers
 
             return 0;
         }
-        
+
     }
 }

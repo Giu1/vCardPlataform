@@ -133,5 +133,40 @@ namespace vCardPlatform.Controllers
                 return Ok(e.Message + e.StackTrace);
             }
         }
+
+        //verifica se o vcard suporta earning e devolve a percentagem
+        public int SeachEarning(int id)
+        {
+            SqlConnection connection = null;
+            SqlCommand command = null;
+
+
+            connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+
+
+                string cmdSQL = "Select EarningPercentege FROM Earning WHERE Id=@id";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@id", id);
+
+                SqlDataReader reader = command.ExecuteReader();
+                int earning = Convert.ToInt32(reader["Id"].ToString());
+
+                connection.Close();
+                return earning;
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+
+            return 0;
+        }
     }
 }
