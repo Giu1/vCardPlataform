@@ -970,9 +970,6 @@ namespace vCardPlatformAPI.Controllers
             string readerBankReceiver = null;
             string readerBankSender = null;
 
-
-
-            //TODO check other variables
             //check user_sender
             if (movimento.Amount<0)
             {

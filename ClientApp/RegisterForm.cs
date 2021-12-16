@@ -31,7 +31,8 @@ namespace ClientApp
                 AccountOwner = textBoxAccountOwner.Text,
                 Email = this.textBoxEmail.Text,
                 ConfirmationCode = int.Parse(textBoxConfirmationCode.Text),
-                Password = LoginForm.Hash_SHA256(this.textBoxPassword.Text)
+                Password = LoginForm.Hash_SHA256(this.textBoxPassword.Text),
+                BankRef = this.textBoxBRef.Text
             };
 
             if (obj.Id <= 900000000 || obj.Id >= 999999999)
@@ -64,26 +65,9 @@ namespace ClientApp
                 return;
             }
 
-            string link = String.Format("http://localhost:50766/api/conta/" + obj.Id);
+            //string link = String.Format("http://localhost:50766/api/conta/" + obj.Id);
 
-            //T
-            /*
-            try
-            {
-                WebRequest request = WebRequest.Create(link);
-                request.Method = "GET";
-                HttpWebResponse response = null;
-
-                response = (HttpWebResponse)request.GetResponse();
-
-                MessageBox.Show("Utilizador Já Existe.");
-
-                return;
-            }
-            catch (Exception) { }
-            */
-
-            link = String.Format("http://localhost:50766");
+            string link = String.Format("http://localhost:50766");
             var contaInJson = JsonConvert.SerializeObject(obj);
 
             try
@@ -93,9 +77,9 @@ namespace ClientApp
                 request.AddJsonBody(contaInJson);
 
                 RestSharp.IRestResponse response = client.Execute(request);
-                MessageBox.Show(response.StatusCode.ToString());
+                MessageBox.Show(response.Content.ToString());
 
-                if (response.StatusCode == HttpStatusCode.Created)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
                     LoginForm LogForm = new LoginForm();
                     this.Hide();
