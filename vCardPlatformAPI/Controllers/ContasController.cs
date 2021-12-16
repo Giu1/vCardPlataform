@@ -6,8 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
-
+using System.Web.Script.Serialization;
 using vCardPlatformAPI.Models;
+using ContaBankSide = vCardPlatform.Models.Conta;
 
 namespace vCardPlatformApi.Controllers
 {
@@ -268,8 +269,66 @@ namespace vCardPlatformApi.Controllers
         {
             SqlConnection connection = null;
             SqlCommand command = null;
+            String readerBankSender;
 
 
+            //Verificar banco user
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT NAME FROM Banks WHERE ID=@idPedidosTable";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", user.BankRef);
+
+
+                readerBankSender = (string)command.ExecuteScalar();
+
+                if (readerBankSender == null)
+                {
+                    if (connection.State == System.Data.ConnectionState.Open)
+                    {
+                        connection.Close();
+                    }
+                    return Ok("Erro BnkRefSender inválido");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("IDSender not found" + ex.Message);
+            }
+
+            //Get conta sender
+            vCardPlatform.Models.Conta contaSender = null;
+            string linkSave = String.Format("https://localhost:" + user.BankRef + "/" + readerBankSender + "/conta/phonenumber/" + user.Id);
+            try
+            {
+                WebRequest requestPassword = WebRequest.Create(linkSave);
+                requestPassword.Method = "GET";
+                HttpWebResponse responsePassword = null;
+
+                responsePassword = (HttpWebResponse)requestPassword.GetResponse();
+
+                String strResul = null;
+                using (Stream stream = responsePassword.GetResponseStream())
+                {
+
+                    StreamReader reader = new StreamReader(stream);
+                    strResul = reader.ReadToEnd();
+                    reader.Close();
+                }
+
+                var serializer = new JavaScriptSerializer();
+
+                contaSender = (vCardPlatform.Models.Conta)serializer.Deserialize(strResul, typeof(vCardPlatform.Models.Conta));
+            }
+            catch (Exception ex)
+            {
+
+                Ok("Erro: " + ex.Message + "\n" + ex.StackTrace);
+            }
+
+            //Criar conta user
             connection = null;
             try
             {
@@ -278,29 +337,27 @@ namespace vCardPlatformApi.Controllers
 
                 if (user.Photo != null)
                 {
-                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,@photo,@password,NULL,NULL)";
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,@photo,@password,@bankRef,@bankId)";
                     command = new SqlCommand(cmdSQL, connection);
                     command.Parameters.AddWithValue("@photo", Convert.FromBase64String(user.Photo));
                 }
                 else
                 {
                     //falta os 2 ultimos parametros
-                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,NULL,@password,NULL,NULL)";
+                    string cmdSQL = "INSERT INTO Contas values(@PhoneNumber,@accountowner,0,@CreatedAt,@email,@confirmationcode,NULL,@password,@bankRef,@bankId)";
                     command = new SqlCommand(cmdSQL, connection);
                 }
 
                 command.Parameters.AddWithValue("@PhoneNumber", user.Id);
                 command.Parameters.AddWithValue("@accountowner", user.AccountOwner);
-                command.Parameters.AddWithValue("@CreatedAt", DateTime.Now.ToString("dd / MM / yyyy"));
+                command.Parameters.AddWithValue("@CreatedAt", DateTime.Now.Ticks + "");
                 command.Parameters.AddWithValue("@confirmationcode", user.ConfirmationCode);
                 command.Parameters.AddWithValue("@password", user.Password);
                 command.Parameters.AddWithValue("@email", user.Email);
 
-                //todo
-                /*
-                 * pedidoAInserir.BankId = (string)reader["BankId"];
-                    pedidoAInserir.BankRef = (string)reader["BankReference"];
-                 */
+                command.Parameters.AddWithValue("@bankRef", user.BankRef);
+                command.Parameters.AddWithValue("@bankId", contaSender.Id);
+
 
                 int numRows = command.ExecuteNonQuery();
 
@@ -308,10 +365,10 @@ namespace vCardPlatformApi.Controllers
 
                 if (numRows > 0)
                 {
-                    return Created("Sucesso",user);
+                    return Ok("Sucesso");
                 }
 
-                return NotFound();
+                return Ok("Erro - Id nao encontrado");
             }
             catch (Exception e)
             {
@@ -320,7 +377,7 @@ namespace vCardPlatformApi.Controllers
                     connection.Close();
                 }
 
-                return BadRequest(e.Message + e.StackTrace);
+                return Ok(e.Message + e.StackTrace);
             }
 
         }
@@ -423,5 +480,7 @@ namespace vCardPlatformApi.Controllers
                 return Ok(e.Message + e.StackTrace);
             }
         }
+
+
     }
 }
