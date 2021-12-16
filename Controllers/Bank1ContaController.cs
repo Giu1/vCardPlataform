@@ -40,8 +40,60 @@ namespace vCardPlatform.Controllers
                     pedidoAInserir.AccountOwner = (string)reader["AccountOwner"];
                     pedidoAInserir.CreatedAt = (string)reader["CreatedAt"];
                     pedidoAInserir.Email = (string)reader["Email"];
-                    pedidoAInserir.ConfirmationCode = (int)reader["ConfirmationCode"];
+                    pedidoAInserir.ConfirmationCode = (int)reader["BankReference"];
+                    pedidoAInserir.ConfirmationCode = (int)reader["BankId"];
 
+                }
+
+                reader.Close();
+                connection.Close();
+                if (pedidoAInserir != null)
+                {
+                    return Ok(pedidoAInserir);
+                }
+                else
+                {
+                    return Ok("Erro - Id nao encontrado");
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+        }
+
+        [Route("phonenumber/{id}")]
+        [HttpGet]
+        public IHttpActionResult GetContaByTelefone(string id)
+        {
+            SqlConnection connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Contas WHERE PhoneNumber=@idPedidosTable";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                Conta pedidoAInserir = null;
+
+                while (reader.Read())
+                {
+                    pedidoAInserir = new Conta();
+                    pedidoAInserir.Id = (string)reader["Id"];
+                    pedidoAInserir.Balance = (float)reader["Balance"];
+                    pedidoAInserir.AccountOwner = (string)reader["AccountOwner"];
+                    pedidoAInserir.CreatedAt = (string)reader["CreatedAt"];
+                    pedidoAInserir.Email = (string)reader["Email"];
+                    pedidoAInserir.ConfirmationCode = (int)reader["ConfirmationCode"];
+                    pedidoAInserir.ConfirmationCode = (int)reader["BankReference"];
+                    pedidoAInserir.ConfirmationCode = (int)reader["BankId"];
                 }
 
                 reader.Close();

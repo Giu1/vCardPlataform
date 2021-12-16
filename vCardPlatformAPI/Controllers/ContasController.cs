@@ -350,20 +350,7 @@ namespace vCardPlatformApi.Controllers
                 while (reader.Read())
                 {
                     UserRemove = new User();
-                    UserRemove.AccountOwner = (string)reader["AccountOwner"];
-                    UserRemove.Email = (string)reader["Email"];
-                    UserRemove.ConfirmationCode = (int)reader["ConfirmationCode"];
-                    UserRemove.Password = (string)reader["Password"];
                     UserRemove.Balance = (float)reader["Balance"];
-                    if (reader["Photo"] != DBNull.Value)
-                    {
-                        UserRemove.Photo = Convert.ToBase64String((Byte[])reader["Photo"]);
-                    }
-                    else
-                    {
-                        UserRemove.Photo = null;
-                    }
-
 
                 }
 
@@ -371,7 +358,7 @@ namespace vCardPlatformApi.Controllers
                 connection.Close();
                 if (UserRemove == null)
                 {
-                    return NotFound();
+                    return Ok("Erro - Id nao encontrado");
                 }
             }
             catch (Exception e)
@@ -386,7 +373,7 @@ namespace vCardPlatformApi.Controllers
 
             if (UserRemove.Balance != 0)
             {
-                return BadRequest("Account balance must be 0 to delete");
+                return Ok("Account balance must be 0 to delete");
             }
 
             //inserts full client
@@ -408,10 +395,10 @@ namespace vCardPlatformApi.Controllers
 
                 if (numRows > 0)
                 {
-                    return Ok();
+                    return Ok("Sucesso");
                 }
 
-                return NotFound();
+                return Ok("Erro - Id nao encontrado");
             }
             catch (Exception e)
             {
