@@ -59,6 +59,7 @@ namespace ClientApp
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // label3
             // 
@@ -71,6 +72,7 @@ namespace ClientApp
             // 
             // textBox2
             // 
+            this.textBox2.HideSelection = false;
             this.textBox2.Location = new System.Drawing.Point(263, 181);
             this.textBox2.Name = "textBox2";
             this.textBox2.PasswordChar = '*';
@@ -177,6 +179,7 @@ namespace ClientApp
             // 
             // textBox7
             // 
+            this.textBox7.HideSelection = false;
             this.textBox7.Location = new System.Drawing.Point(263, 280);
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(353, 22);
@@ -236,7 +239,7 @@ namespace ClientApp
             this.Controls.Add(this.label4);
             this.Controls.Add(this.pictureBox1);
             this.Name = "ProfileForm";
-            this.Text = "Form1";
+            this.Text = "Profile";
             this.Load += new System.EventHandler(this.ProfileForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

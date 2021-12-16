@@ -465,6 +465,42 @@ namespace vCardPlatformAPI.Controllers
 
             //update saldo sender
 
+            //check if earnings supported
+            connection = null;
+
+            bool supported = false;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM EarningsSupported WHERE PhoneNumber=@id";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@id", movimento.IdSender);
+                string id = (String) command.ExecuteScalar();
+
+                User receiver = null;
+
+                
+
+                if (command.ExecuteScalar() == null)
+                {
+                    return Ok("Erro - Id não encontrado");
+                }
+                if (receiver.Id == helper.Id)
+                {
+                    return Ok("Erro - Sender e Receiver teem o mesmo id");
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
             connection = null;
             try
             {

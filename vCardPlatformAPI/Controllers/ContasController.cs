@@ -246,7 +246,7 @@ namespace vCardPlatformApi.Controllers
 
                 if (numRows > 0)
                 {
-                    return Ok();
+                    return Ok("Sucesso");
                 }
 
                 return NotFound();
