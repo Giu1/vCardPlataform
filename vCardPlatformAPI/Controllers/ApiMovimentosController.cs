@@ -274,7 +274,8 @@ namespace vCardPlatformAPI.Controllers
             SqlConnection connection = null;
             SqlCommand command = null;
 
-
+            int Eran = SeachEarning(movimento.IdSender);
+            float percentagemEran = (float)Eran;
 
             connection = null;
             try
@@ -286,6 +287,11 @@ namespace vCardPlatformAPI.Controllers
                 string cmdSQL = "UPDATE Contas set Balance=Balance - @amount WHERE PhoneNumber = @id";
                 command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@id", movimento.IdSender);
+
+                if(percentagemEran > 0)
+                {
+                    movimentoBancario.Amount = movimentoBancario.Amount * (1 - (percentagemEran / 100));
+                }
 
                 command.Parameters.AddWithValue("@amount", movimentoBancario.Amount);
 
@@ -1323,7 +1329,11 @@ namespace vCardPlatformAPI.Controllers
                 command.Parameters.AddWithValue("@id", id);
 
                 SqlDataReader reader = command.ExecuteReader();
-                int earning = Convert.ToInt32(reader["Id"].ToString());
+                int earning = 0;
+                while (reader.Read())
+                {
+                    earning = (int)reader["EarningPercentege"];
+                }
 
                 connection.Close();
                 return earning;
@@ -1338,6 +1348,8 @@ namespace vCardPlatformAPI.Controllers
 
             return 0;
         }
+
+
 
     }
 }
