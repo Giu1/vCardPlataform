@@ -1,0 +1,11 @@
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\bin\Release\Excel_Lib.dll
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\bin\Release\Excel_Lib.pdb
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\bin\Release\BouncyCastle.Crypto.dll
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\bin\Release\GemBox.Spreadsheet.dll
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\bin\Release\GemBox.Spreadsheet.xml
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\obj\Release\Excel_Lib.csproj.AssemblyReference.cache
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\obj\Release\Excel_Lib.csproj.ResolveComReference.cache
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\obj\Release\Excel_Lib.csproj.CoreCompileInputs.cache
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\obj\Release\Excel_Lib.csproj.CopyComplete
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\obj\Release\Excel_Lib.dll
+C:\Users\lucas\source\repos\ProjetoFinal\Excel_Lib\obj\Release\Excel_Lib.pdb

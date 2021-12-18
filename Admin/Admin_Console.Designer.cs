@@ -100,6 +100,7 @@ namespace AdminConsole
             this.button15.TabIndex = 96;
             this.button15.Text = "Export to Excel";
             this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // button14
             // 
@@ -109,6 +110,7 @@ namespace AdminConsole
             this.button14.TabIndex = 95;
             this.button14.Text = "Export to Xml";
             this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
             // button13
             // 

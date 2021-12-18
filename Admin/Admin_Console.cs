@@ -8,10 +8,14 @@ using System.Net;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using vCardPlatform.Models;
 using vCardPlatformAPI.Models;
+using Excel_Lib;
+using Aspose.Cells;
+using Aspose.Cells.Utility;
 
 namespace AdminConsole
 {
@@ -416,6 +420,36 @@ namespace AdminConsole
             Console.WriteLine("You");
             
                      }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            XML xml = new XML();
+            xml.logs = listBox2.Text;
+            string filename = "LogX.xml";
+            xml.Save(filename);
+            String fullPath = Path.GetFullPath(filename);
+
+            Console.WriteLine(fullPath);
+            MessageBox.Show("Ficheiro Criado Com Sucesso");
+           
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            
+            var json = JsonConvert.SerializeObject(listBox2.Text);
+            Console.WriteLine(json);
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            JsonLayoutOptions options = new JsonLayoutOptions();
+
+            JsonUtility.ImportData(json, worksheet.Cells, 0, 0, options);
+            workbook.Save("LogE.xlsx");
+            string fileName = "Log.xlsx";
+            String fullPath = Path.GetFullPath(fileName);
+
+            Console.WriteLine(fullPath);
+        }
     }
 
 }
