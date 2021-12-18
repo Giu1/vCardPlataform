@@ -42,11 +42,12 @@ namespace ClientApp
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxBRef = new System.Windows.Forms.TextBox();
+            this.buttonCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonSubmit
             // 
-            this.buttonSubmit.Location = new System.Drawing.Point(93, 202);
+            this.buttonSubmit.Location = new System.Drawing.Point(178, 202);
             this.buttonSubmit.Name = "buttonSubmit";
             this.buttonSubmit.Size = new System.Drawing.Size(75, 23);
             this.buttonSubmit.TabIndex = 0;
@@ -160,11 +161,22 @@ namespace ClientApp
             this.textBoxBRef.Size = new System.Drawing.Size(148, 20);
             this.textBoxBRef.TabIndex = 11;
             // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Location = new System.Drawing.Point(15, 202);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 13;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
             // RegisterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(279, 252);
+            this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBoxBRef);
             this.Controls.Add(this.label5);
@@ -201,5 +213,6 @@ namespace ClientApp
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxBRef;
+        private System.Windows.Forms.Button buttonCancel;
     }
 }
