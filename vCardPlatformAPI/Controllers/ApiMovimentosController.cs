@@ -280,7 +280,8 @@ namespace vCardPlatformAPI.Controllers
             SqlConnection connection = null;
             SqlCommand command = null;
 
-
+            int Eran = SeachEarning(movimento.IdSender);
+            float percentagemEran = (float)Eran;
 
             connection = null;
             try
@@ -292,6 +293,11 @@ namespace vCardPlatformAPI.Controllers
                 string cmdSQL = "UPDATE Contas set Balance=Balance - @amount WHERE PhoneNumber = @id";
                 command = new SqlCommand(cmdSQL, connection);
                 command.Parameters.AddWithValue("@id", movimento.IdSender);
+
+                if(percentagemEran > 0)
+                {
+                    movimentoBancario.Amount = movimentoBancario.Amount * (1 - (percentagemEran / 100));
+                }
 
                 command.Parameters.AddWithValue("@amount", movimentoBancario.Amount);
 
@@ -1057,7 +1063,7 @@ namespace vCardPlatformAPI.Controllers
 
             //get conta receiver
 
-            link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/" + readerBankSender + "/conta/" + movimento.IdReceiver);
+            link = String.Format("https://localhost:" + movimento.BankRefReceiver + "/" + readerBankReceiver + "/conta/" + movimento.IdReceiver);
             try
             {
                 WebRequest requestPassword = WebRequest.Create(link);
@@ -1429,6 +1435,52 @@ namespace vCardPlatformAPI.Controllers
             return Ok("Sucesso");
         }
 
+        [Route("confirmation/{id:int}/{code:int}")]
+        [HttpGet]
+        public IHttpActionResult ConfirmationCode(int id,int code)
+        {
+            SqlConnection connection = null;
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT * FROM Contas WHERE PhoneNumber=@idPedidosTable";
+                SqlCommand command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@idPedidosTable", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                User receiver = null;
+
+                while (reader.Read())
+                {
+                    receiver = new User();
+                    receiver.ConfirmationCode = (int)reader["ConfirmationCode"];
+                }
+                reader.Close();
+                connection.Close();
+
+                if (receiver.ConfirmationCode ==code)
+                {
+                    return Ok("Sucesso");
+
+                }
+                else
+                {
+                    return Ok("Erro -  Confirmation codes dont match");
+                }
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+
+        }
+
         //verifica se o vcard suporta earning e devolve a percentagem
         public int SeachEarning(string id)
         {
@@ -1448,7 +1500,11 @@ namespace vCardPlatformAPI.Controllers
                 command.Parameters.AddWithValue("@id", id);
 
                 SqlDataReader reader = command.ExecuteReader();
-                int earning = Convert.ToInt32(reader["Id"].ToString());
+                int earning = 0;
+                while (reader.Read())
+                {
+                    earning = (int)reader["EarningPercentege"];
+                }
 
                 connection.Close();
                 return earning;
@@ -1463,6 +1519,8 @@ namespace vCardPlatformAPI.Controllers
 
             return 0;
         }
+
+
 
     }
 }

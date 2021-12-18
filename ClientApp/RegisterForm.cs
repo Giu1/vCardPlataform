@@ -150,5 +150,15 @@ namespace ClientApp
         {
 
         }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            LoginForm LogForm = new LoginForm();
+            this.Hide();
+
+            LogForm.ShowDialog();
+
+            this.Close();
+        }
     }
 }
