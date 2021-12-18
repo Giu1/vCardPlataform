@@ -449,6 +449,7 @@ namespace AdminConsole
             String fullPath = Path.GetFullPath(fileName);
 
             Console.WriteLine(fullPath);
+            MessageBox.Show("Ficheiro Criado Com Sucesso");
         }
     }
 
