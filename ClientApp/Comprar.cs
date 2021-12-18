@@ -48,8 +48,15 @@ namespace ClientApp
                 
                 return;
             }
-            
-            string helper;
+
+            ConfirmationCode frm = new ConfirmationCode(authUser);
+            if (frm.ShowDialog() != DialogResult.OK)
+            {
+                // The user canceled.
+                this.Close();
+            }
+
+
             HttpWebResponse response = null;
             try
             {

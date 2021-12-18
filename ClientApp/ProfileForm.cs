@@ -127,6 +127,8 @@ namespace ClientApp
 
             }
 
+            //update conta
+
             string link = String.Format("http://localhost:50766/api/conta/" + user.Id);
 
             try
@@ -149,11 +151,23 @@ namespace ClientApp
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    this.DialogResult = DialogResult.OK;
-                    AuthUser = user;
-                    MessageBox.Show("Alterações realizadas com sucesso");
-                    return;
+                    char[] charsToTrim = { '"', '\'' };
 
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            MessageBox.Show(responseText);
+                        }
+                        else
+                        {
+                            MessageBox.Show(responseText);
+                            this.DialogResult = DialogResult.OK;
+                            return;
+                        }
+                    }
                 }
 
             }
@@ -261,6 +275,11 @@ namespace ClientApp
 
                 return sb.ToString();
             }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

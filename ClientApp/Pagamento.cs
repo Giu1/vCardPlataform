@@ -48,9 +48,9 @@ namespace ClientApp
                 MessageBox.Show("Erro - Por favor inserir um numero");
             }
             
-            string helper;
+            
 
-            PasswordForm frm = new PasswordForm(AuthUser);
+            ConfirmationCode frm = new ConfirmationCode(AuthUser);
             if (frm.ShowDialog() != DialogResult.OK)
             {
                 // The user canceled.

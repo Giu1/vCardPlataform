@@ -10,6 +10,7 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using vCardPlatform.Models;
 using vCardPlatformAPI.Models;
 
 namespace AdminConsole
@@ -29,7 +30,7 @@ namespace AdminConsole
         String[] FilterTime = { "1 Week", "1 month", "6 months", "1 Year" };
         String[] FilterBalance = { "Most Money", "Least Money" };
         String localhost = "127.0.0.1";
-        AdminAccount User = Global.CurrentUser;
+        AdminAccount user = Global.CurrentUser;
         //Change String
         public string changeID { get; set; }
 
@@ -148,7 +149,8 @@ namespace AdminConsole
 
         private void button10_Click(object sender, EventArgs e)
         {
-            
+            //emitir pagamento incluindo bank side
+
             UpdateBankValues(setvalueindex);
             // Set Value of Banks Post
 
@@ -176,7 +178,7 @@ namespace AdminConsole
 
         private void AdminConsole_Load(object sender, EventArgs e)
         {
-            label3.Text = "Welcome : " + User.Nome;
+            label3.Text = "Welcome : " + user.Nome;
             List<String> list = new List<String>();
             list.Add("https://localhost:44360/bank_1/bank/");
             EntIp = list.ToArray();

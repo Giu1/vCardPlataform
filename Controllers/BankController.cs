@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace vCardPlatform.Controllers
 {
-    [RoutePrefix("bank_1/bank")]
+    [RoutePrefix("bank1/bank")]
     public class BankController : ApiController
     {
         string[] BankValues = { };
@@ -76,7 +76,7 @@ namespace vCardPlatform.Controllers
             String[] values = null;
             SqlConnection connection = null;
             SqlCommand command = null;
-            SqlDataReader reader = null;
+            
 
             connection = null;
             try

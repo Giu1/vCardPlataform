@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -27,13 +28,47 @@ namespace ClientApp
             InitializeComponent();
             this.authUser = conta;
 
-            string link = String.Format("https://localhost:44360/conta/" + conta.BankId);
-
             ContaBankSide obj = null;
+            Bank obj2 = null;
 
+            //get bank Sender
+            string readerBank = null;
+
+            string linkSave = String.Format("http://localhost:50766/api/bank/" + conta.BankRef);
             try
             {
-                WebRequest requestPassword = WebRequest.Create(link);
+                WebRequest requestPassword = WebRequest.Create(linkSave);
+                requestPassword.Method = "GET";
+                HttpWebResponse responsePassword = null;
+
+                responsePassword = (HttpWebResponse)requestPassword.GetResponse();
+
+                String strResul = null;
+                using (Stream stream = responsePassword.GetResponseStream())
+                {
+
+                    StreamReader reader = new StreamReader(stream);
+                    strResul = reader.ReadToEnd();
+                    reader.Close();
+                }
+
+                var serializer = new JavaScriptSerializer();
+
+                obj2 = (Bank)serializer.Deserialize(strResul, typeof(Bank));
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+
+
+            linkSave = String.Format("https://localhost:" + conta.BankRef + "/" + obj2.Name + "/conta/" + conta.BankId);
+            try
+            {
+                WebRequest requestPassword = WebRequest.Create(linkSave);
                 requestPassword.Method = "GET";
                 HttpWebResponse responsePassword = null;
 
@@ -52,6 +87,7 @@ namespace ClientApp
 
                 obj = (ContaBankSide)serializer.Deserialize(strResul, typeof(ContaBankSide));
                 this.contaBank = obj;
+
             }
             catch (Exception ex)
             {
@@ -103,15 +139,26 @@ namespace ClientApp
 
                 response = (HttpWebResponse)request.GetResponse();
 
+
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    using (var stream = response.GetResponseStream())
-                    using (var reader = new StreamReader(stream))
+                    char[] charsToTrim = { '"', '\'' };
+
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
                     {
-                        MessageBox.Show(reader.ReadToEnd());
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            MessageBox.Show(responseText);
+                        }
+                        else
+                        {
+                            MessageBox.Show(responseText);
+                            this.DialogResult = DialogResult.OK;
+                            return;
+                        }
                     }
-                    this.DialogResult = DialogResult.OK;
-                    return;
                 }
 
             }

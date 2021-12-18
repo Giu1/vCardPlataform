@@ -37,7 +37,7 @@
       <HintPath>..\packages\M2Mqtt.4.3.0.0\lib\net45\M2Mqtt.Net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\vCardPlataform\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -117,6 +117,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\bank1-API.csproj">
+      <Project>{2FFD75B0-669A-4C35-881D-5390DBB1F100}</Project>
+      <Name>bank1-API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\vCardPlatformAPI\vCardPlatformAPI.csproj">
       <Project>{5f7c0f00-f641-4368-ad67-6ee0f4aa450e}</Project>
       <Name>vCardPlatformAPI</Name>

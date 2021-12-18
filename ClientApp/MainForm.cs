@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -66,7 +67,7 @@ namespace ClientApp
                 var serializer = new JavaScriptSerializer();
 
                 registos = (List<MovimentoBancario>)serializer.Deserialize(strResul, typeof(List<MovimentoBancario>));
-
+                this.richTextBox1.Text = "";
 
                 foreach (var item in registos)
                 {
@@ -81,7 +82,7 @@ namespace ClientApp
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 this.richTextBox1.Text = "Erro";
@@ -187,6 +188,63 @@ namespace ClientApp
 
             ReloadUser();
             LoadElements();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            //TODO - check password serverside
+            PasswordForm frm = new PasswordForm(AuthUser);
+            if (frm.ShowDialog() != DialogResult.OK)
+            {
+                // The user canceled.
+                this.Close();
+            }
+
+            //emitir pagamento incluindo bank side
+
+            string link = String.Format("http://localhost:50766/api/conta/"+AuthUser.Id);
+
+            MovimentoBancario registoNoBanco = new MovimentoBancario();
+
+            try
+            {
+                WebRequest request = WebRequest.Create(link);
+                request.Method = "DELETE";
+                request.ContentType = "application/json";
+                HttpWebResponse response = null;
+
+                response = (HttpWebResponse)request.GetResponse();
+
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    char[] charsToTrim = { '"', '\'' };
+
+
+                    using (var reader = new System.IO.StreamReader(response.GetResponseStream(), ASCIIEncoding.ASCII))
+                    {
+                        string responseText = reader.ReadToEnd();
+                        if (responseText != "\"Sucesso\"")
+                        {
+                            MessageBox.Show(responseText);
+                        }
+                        else
+                        {
+                            MessageBox.Show(responseText);
+                            this.DialogResult = DialogResult.OK;
+                            return;
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao emitir nota - emitir movimento bank side" + ex.Message + "\n" + ex.StackTrace);
+
+                return;
+            }
+
         }
     }
 }

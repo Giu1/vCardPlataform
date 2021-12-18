@@ -134,6 +134,7 @@ namespace ClientApp
             this.button5.TabIndex = 9;
             this.button5.Text = "Apagar Conta";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // label4
             // 
@@ -183,7 +184,7 @@ namespace ClientApp
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Menu Principal";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
