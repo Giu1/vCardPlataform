@@ -30,18 +30,9 @@ namespace ClientApp
         private void LoadElements()
         {
             this.label1.Text = AuthUser.AccountOwner;
-            this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            
             this.label4.Text = AuthUser.Balance + " €";
-            if (AuthUser.Photo != null)
-            {
-                this.pictureBox1.Image = Image.FromStream(new MemoryStream(Convert.FromBase64String(AuthUser.Photo)));
-                
-
-            }
-            else
-            {
-                this.pictureBox1.Image = (Image)Properties.Resources.defautImage;
-            }
+            
 
             string linkSave = String.Format("http://localhost:50766/api/movimentos/user/"+AuthUser.Id);
 
@@ -244,6 +235,11 @@ namespace ClientApp
 
                 return;
             }
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
 
         }
     }
