@@ -23,7 +23,8 @@ namespace AdminConsole
         String[] curBank = { };
         int setvalueindex = -1;
         int index = -1;
-        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
+        string[] topics = { "#1", "#2" };
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
         MqttClient broker;
         String[] FilterTypes = { "By Bank", "By Transfer Type", "By Time", "By Balance" };
         String[] FilterTransfer = { "Credito","Debito" };
@@ -54,7 +55,7 @@ namespace AdminConsole
 
         private void button11_Click(object sender, EventArgs e)
         {
-            ConnectMosquitto();
+            //ConnectMosquitto();
             //RequestAllOperations();
 
         }
@@ -63,7 +64,7 @@ namespace AdminConsole
              broker = new MqttClient(localhost);
              try
              {
-                broker.MqttMsgPublishReceived += broker_MqttMsgPublishReceived;
+               
                 broker.Connect(Guid.NewGuid().ToString());
                  if (!broker.IsConnected)
                  {
@@ -182,6 +183,9 @@ namespace AdminConsole
             List<String> list = new List<String>();
             list.Add("https://localhost:44360/bank_1/bank/");
             EntIp = list.ToArray();
+            ConnSubMq();
+
+
         }
 
         private void button6_Click(object sender, EventArgs e)  // Btn Change 2
@@ -369,6 +373,48 @@ namespace AdminConsole
                 return;
             }
 
+        }
+        
+        private void ConnSubMq()
+        {
+            broker = new MqttClient("127.0.0.1");
+            try
+            {
+
+                byte var =  broker.Connect(Guid.NewGuid().ToString());
+                if (!broker.IsConnected)
+                {
+                    Console.WriteLine("Error connecting to message broker...");
+                    return;
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Verifique a disponibilidade do broker");
+            }
+
+            broker.MqttMsgPublishReceived += Broker_MqttMsgPublishReceived;
+            broker.MqttMsgSubscribed += Broker_MqttMsgSubscribed;
+
+            broker.Subscribe(topics, qosLevels);
+            
+
+        }
+
+        private void Broker_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
+        {
+            MessageBox.Show("Acabou de subscrever os topicos");
+        }
+
+        private void Broker_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            string msg = Encoding.UTF8.GetString(e.Message);
+            this.Invoke((MethodInvoker)delegate
+            {
+                listBox2.Text = listBox2.Text + $"{e.Topic} : {msg}\n";});
+            Console.WriteLine("You");
+            
         }
     }
 

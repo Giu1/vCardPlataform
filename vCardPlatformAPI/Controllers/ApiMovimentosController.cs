@@ -16,15 +16,21 @@ using User = vCardPlatformAPI.Models.User;
 using ContaBankSide = vCardPlatform.Models.Conta;
 using vCardPlatform.Models;
 using vCardPlatformAPI.Models;
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace vCardPlatformAPI.Controllers
 {
+
     [RoutePrefix("api/movimentos")]
     public class ApiMovimentosController : ApiController
     {
-
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ProductsApp.Properties.Settings.ConnectionToDB"].ConnectionString;
-
+        string[] topics = { "#1", "#2" };
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
+        MqttClient broker;
+        Mosquito m = new Mosquito();  
+       
         // GET api/<controller>
         public IEnumerable<string> Get()
         {
@@ -1299,8 +1305,41 @@ namespace vCardPlatformAPI.Controllers
 
                 return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
             }
+            //Mosquito
+            /*try
+            {
+                m.Conn();
+                m.Publish(movimento.ToString());
 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
 
+            }*/
+            broker = new MqttClient("127.0.0.1");
+            try
+            {
+
+                byte var = broker.Connect(Guid.NewGuid().ToString());
+                if (!broker.IsConnected)
+                {
+                    Console.WriteLine("Error connecting to message broker...");
+                    
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Verifique a disponibilidade do broker");
+            }
+       
+                //send a notification to the channel with ne name User ID
+                broker.Publish(topics[1], Encoding.UTF8.GetBytes("pls work fucker"));
+  
+        
+        
+          
             return Ok("Sucesso");
         }
 
