@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 using vCardPlatform.Models;
 using vCardPlatformAPI.Models;
 
@@ -20,6 +22,11 @@ namespace ClientApp
     {
 
         private static User AuthUser { get; set; }
+        MqttClient broker;
+        string[] topics = { "All" };
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE};
+        RichTextBox log;
+        int run = 0;
         public MainForm(User user)
         {
             InitializeComponent();
@@ -29,9 +36,11 @@ namespace ClientApp
 
         private void LoadElements()
         {
+            log = this.richTextBox1;
             this.label1.Text = AuthUser.AccountOwner;
             this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             this.label4.Text = AuthUser.Balance + " €";
+            ConnSubMq();
             if (AuthUser.Photo != null)
             {
                 this.pictureBox1.Image = Image.FromStream(new MemoryStream(Convert.FromBase64String(AuthUser.Photo)));
@@ -46,48 +55,57 @@ namespace ClientApp
             string linkSave = String.Format("http://localhost:50766/api/movimentos/user/"+AuthUser.Id);
 
             List<MovimentoBancario> registos;
-
-            try
+           
+            if(run == 0)
             {
-                WebRequest requestPassword = WebRequest.Create(linkSave);
-                requestPassword.Method = "GET";
-                HttpWebResponse responsePassword = null;
+                try
+                {
+                    WebRequest requestPassword = WebRequest.Create(linkSave);
+                    requestPassword.Method = "GET";
+                    HttpWebResponse responsePassword = null;
 
-                responsePassword = (HttpWebResponse)requestPassword.GetResponse();
+                    responsePassword = (HttpWebResponse)requestPassword.GetResponse();
 
-                String strResul = null;
-                using (Stream stream = responsePassword.GetResponseStream())
+                    String strResul = null;
+                    using (Stream stream = responsePassword.GetResponseStream())
+                    {
+
+                        StreamReader reader = new StreamReader(stream);
+                        strResul = reader.ReadToEnd();
+                        reader.Close();
+                    }
+
+                    var serializer = new JavaScriptSerializer();
+
+                    registos = (List<MovimentoBancario>)serializer.Deserialize(strResul, typeof(List<MovimentoBancario>));
+                    //this.richTextBox1.Text = "";
+
+                    foreach (var item in registos)
+                    {
+                        if (item.Type == TypeOfMoviment.Credito && item.IdSender== AuthUser.Id+"")
+                        {
+                            string add = "\nEnvias te " + item.Amount + " € a " + item.IdReceiver + "\n";
+                            log.AppendText(add + "\r\n");
+
+                        }
+                        if (item.Type == TypeOfMoviment.Debito && item.IdReceiver == AuthUser.Id + "")
+                        {
+                            string add = "Recebes te " + item.Amount + " € de " + item.IdSender+"\n";
+                            log.AppendText(add + "\r\n");
+                        }
+                    }
+
+                }
+                catch (Exception)
                 {
 
-                    StreamReader reader = new StreamReader(stream);
-                    strResul = reader.ReadToEnd();
-                    reader.Close();
+                    this.richTextBox1.Text = "Erro";
+
                 }
-
-                var serializer = new JavaScriptSerializer();
-
-                registos = (List<MovimentoBancario>)serializer.Deserialize(strResul, typeof(List<MovimentoBancario>));
-                this.richTextBox1.Text = "";
-
-                foreach (var item in registos)
-                {
-                    if (item.Type == TypeOfMoviment.Credito && item.IdSender== AuthUser.Id+"")
-                    {
-                        this.richTextBox1.Text += "Envias te "+item.Amount+" € a "+item.IdReceiver+"\n";
-                    }
-                    if (item.Type == TypeOfMoviment.Debito && item.IdReceiver == AuthUser.Id + "")
-                    {
-                        this.richTextBox1.Text +=  "Recebes te " + item.Amount + " € de " + item.IdSender+"\n";
-                    }
-                }
+                run = 1;
 
             }
-            catch (Exception)
-            {
-
-                this.richTextBox1.Text = "Erro";
-                
-            }
+           
             //this.richTextBox1.Text = 
         }
 
@@ -244,6 +262,56 @@ namespace ClientApp
 
                 return;
             }
+
+        }
+
+        private void ConnSubMq()
+        {
+            broker = new MqttClient("127.0.0.1");
+            try
+            {
+
+                byte var = broker.Connect(Guid.NewGuid().ToString());
+                if (!broker.IsConnected)
+                {
+                    Console.WriteLine("Error connecting to message broker...");
+                    return;
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Verifique a disponibilidade do broker");
+            }
+
+            broker.MqttMsgPublishReceived += Broker_MqttMsgPublishReceived;
+            broker.MqttMsgSubscribed += Broker_MqttMsgSubscribed;
+            string[] topicInfo = { "n" + AuthUser.Id.ToString() };
+            broker.Subscribe(topicInfo, qosLevels);
+
+
+        }
+
+        private void Broker_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
+        {
+            //MessageBox.Show("Acabou de subscrever os topicos");
+        }
+
+        private void Broker_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)
+        {
+            string msg = Encoding.UTF8.GetString(e.Message);
+            this.Invoke((MethodInvoker)delegate
+            {
+               
+                log.AppendText(msg + "\r\n");
+                //listBox2.Items.Add(msg);
+            });
+            Console.WriteLine("You");
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
 
         }
     }

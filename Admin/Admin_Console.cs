@@ -23,8 +23,8 @@ namespace AdminConsole
         String[] curBank = { };
         int setvalueindex = -1;
         int index = -1;
-        string[] topics = { "pls1", "pls2" };
-        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
+        string[] topics = { "All" };
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
         MqttClient broker;
         String[] FilterTypes = { "By Bank", "By Transfer Type", "By Time", "By Balance" };
         String[] FilterTransfer = { "Credito","Debito" };
@@ -404,7 +404,7 @@ namespace AdminConsole
 
         private void Broker_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
-            MessageBox.Show("Acabou de subscrever os topicos");
+            //MessageBox.Show("Acabou de subscrever os topicos");
         }
 
         private void Broker_MqttMsgPublishReceived(object sender, MqttMsgPublishEventArgs e)

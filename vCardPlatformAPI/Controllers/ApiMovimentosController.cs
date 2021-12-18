@@ -26,8 +26,8 @@ namespace vCardPlatformAPI.Controllers
     public class ApiMovimentosController : ApiController
     {
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ProductsApp.Properties.Settings.ConnectionToDB"].ConnectionString;
-        string[] topics = { "pls1", "pls2" };
-        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
+        string[] topics = { "All" };
+        byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
         MqttClient broker;
         Mosquito m = new Mosquito();  
        
@@ -1306,32 +1306,67 @@ namespace vCardPlatformAPI.Controllers
 
                 return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
             }
-            // get number from sender
-            
-            
-            
+            // get number from receiver
+
             try
             {
                 connection = new SqlConnection(connectionString);
                 connection.Open();
                 string cmdSQL = "SELECT PhoneNumber FROM Contas WHERE BankId=@id";
-                command = new SqlCommand(cmdSQL, connection);
-                command.Parameters.AddWithValue("@id", movimento.IdSender);
+                SqlCommand command2 = new SqlCommand(cmdSQL, connection);
+                command2.Parameters.AddWithValue("@id", movimento.IdReceiver);
+                SqlDataReader reader = command2.ExecuteReader();
 
-                readerBankReceiver = (string)command.ExecuteScalar();
 
-                if (readerBankReceiver == null)
+                while (reader.Read())
                 {
-                    if (connection.State == System.Data.ConnectionState.Open)
-                    {
-                        connection.Close();
-                    }
-                    return Ok("Erro BnkRefSender inválido");
+                    nReceiver = (string)reader["PhoneNumber"].ToString();
+                    nReceiver.Trim();
                 }
+
+                reader.Close();
+                connection.Close();
+                
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Ok("IDSender not found" + ex.Message);
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
+            }
+            // get number from sender
+
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT PhoneNumber FROM Contas WHERE BankId=@id";
+                SqlCommand command2 = new SqlCommand(cmdSQL, connection);
+                command2.Parameters.AddWithValue("@id", movimento.IdSender);
+                SqlDataReader reader = command2.ExecuteReader();
+
+
+                while (reader.Read())
+                {
+                    nSender = (string)reader["PhoneNumber"].ToString();
+                    nSender.Trim();
+                }
+
+                reader.Close();
+                connection.Close();
+
+            }
+            catch (Exception e)
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                return Ok(e.Message + e.StackTrace);
             }
             //Mosquito
             /*try
@@ -1363,10 +1398,25 @@ namespace vCardPlatformAPI.Controllers
             }
             try
             {
-               // You have recive " + transacaoCopia.montante + "€ on your account from " + transacaoCopia.tipopayment + " With the number " +  transacaoCopia.phone_transaction
-                broker.Publish(topics[1], Encoding.UTF8.GetBytes(movimento.ToString()));
+                if(nSender != null && nReceiver!= null)
+                {
+                    if(nReceiver == nSender || nReceiver=="")
+                    {
+                        // Do nothing
+                    }
+                    else
+                    {
+                        broker.Publish("n" + nReceiver, Encoding.UTF8.GetBytes("Credito: + " + movimento.Amount + "€  De :" + nSender + " Em : " + movimento.Date + "\n Descricão : " + movimento.Description));
+                        broker.Publish("n" + nSender, Encoding.UTF8.GetBytes("Debito: - " + movimento.Amount + "€  De :" + nReceiver + " Em : " + movimento.Date + "\n Descricão : " + movimento.Description));
+                    }
+                    
+                } 
+               
+                
+                broker.Publish("All", Encoding.UTF8.GetBytes("Transferencia -> Valor: "+movimento.Amount+ "€ \n De: :" + nSender + "\n Para : " + nReceiver + "\n Em : " + movimento.Date+"\n Descricão : "+movimento.Description));
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Error");
             }
