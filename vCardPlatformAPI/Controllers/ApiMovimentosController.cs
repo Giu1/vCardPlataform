@@ -26,7 +26,7 @@ namespace vCardPlatformAPI.Controllers
     public class ApiMovimentosController : ApiController
     {
         string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ProductsApp.Properties.Settings.ConnectionToDB"].ConnectionString;
-        string[] topics = { "#1", "#2" };
+        string[] topics = { "pls1", "pls2" };
         byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
         MqttClient broker;
         Mosquito m = new Mosquito();  
@@ -949,7 +949,8 @@ namespace vCardPlatformAPI.Controllers
             SqlCommand command = null;
             string readerBankReceiver = null;
             string readerBankSender = null;
-
+            string nSender = null;
+            string nReceiver = null;
             //check user_sender
             if (movimento.Amount < 0)
             {
@@ -1305,6 +1306,33 @@ namespace vCardPlatformAPI.Controllers
 
                 return Ok("Erro ao emitir nota - emitir movimento Api side " + ex.Message + "\n" + ex.StackTrace);
             }
+            // get number from sender
+            
+            
+            
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                string cmdSQL = "SELECT PhoneNumber FROM Contas WHERE BankId=@id";
+                command = new SqlCommand(cmdSQL, connection);
+                command.Parameters.AddWithValue("@id", movimento.IdSender);
+
+                readerBankReceiver = (string)command.ExecuteScalar();
+
+                if (readerBankReceiver == null)
+                {
+                    if (connection.State == System.Data.ConnectionState.Open)
+                    {
+                        connection.Close();
+                    }
+                    return Ok("Erro BnkRefSender inválido");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("IDSender not found" + ex.Message);
+            }
             //Mosquito
             /*try
             {
@@ -1333,9 +1361,17 @@ namespace vCardPlatformAPI.Controllers
             {
                 MessageBox.Show("Verifique a disponibilidade do broker");
             }
-       
+            try
+            {
+               // You have recive " + transacaoCopia.montante + "€ on your account from " + transacaoCopia.tipopayment + " With the number " +  transacaoCopia.phone_transaction
+                broker.Publish(topics[1], Encoding.UTF8.GetBytes(movimento.ToString()));
+
+            }catch (Exception ex)
+            {
+                Console.WriteLine("Error");
+            }
                 //send a notification to the channel with ne name User ID
-                broker.Publish(topics[1], Encoding.UTF8.GetBytes("pls work fucker"));
+               
   
         
         

@@ -23,7 +23,7 @@ namespace AdminConsole
         String[] curBank = { };
         int setvalueindex = -1;
         int index = -1;
-        string[] topics = { "#1", "#2" };
+        string[] topics = { "pls1", "pls2" };
         byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE };
         MqttClient broker;
         String[] FilterTypes = { "By Bank", "By Transfer Type", "By Time", "By Balance" };
@@ -412,10 +412,10 @@ namespace AdminConsole
             string msg = Encoding.UTF8.GetString(e.Message);
             this.Invoke((MethodInvoker)delegate
             {
-                listBox2.Text = listBox2.Text + $"{e.Topic} : {msg}\n";});
+            listBox2.Items.Add(msg); });
             Console.WriteLine("You");
             
-        }
+                     }
     }
 
 }
