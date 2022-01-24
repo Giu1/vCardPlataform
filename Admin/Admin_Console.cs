@@ -185,7 +185,7 @@ namespace AdminConsole
         {
             label3.Text = "Welcome : " + user.Nome;
             List<String> list = new List<String>();
-            list.Add("https://localhost:44360/bank_1/bank/");
+            list.Add("https://localhost:44360/bank1/bank/");
             EntIp = list.ToArray();
             ConnSubMq();
 
@@ -449,6 +449,7 @@ namespace AdminConsole
             String fullPath = Path.GetFullPath(fileName);
 
             Console.WriteLine(fullPath);
+            MessageBox.Show("Ficheiro Criado Com Sucesso");
         }
     }
 

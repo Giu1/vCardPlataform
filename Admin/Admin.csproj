@@ -39,6 +39,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="Excel_Lib">
+      <HintPath>..\Excel_Lib2\obj\Release\Excel_Lib.dll</HintPath>
+    </Reference>
     <Reference Include="GemBox.Spreadsheet, Version=47.0.0.1345, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
       <HintPath>..\packages\GemBox.Spreadsheet.47.0.1345\lib\net35\GemBox.Spreadsheet.dll</HintPath>
     </Reference>
@@ -133,10 +136,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\source\repos\ProjetoFinal\Excel_Lib\Excel_Lib.csproj">
-      <Project>{d927044a-f4cc-4543-a4ca-c6effaeda85d}</Project>
-      <Name>Excel_Lib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\bank1-API.csproj">
       <Project>{2FFD75B0-669A-4C35-881D-5390DBB1F100}</Project>
       <Name>bank1-API</Name>
@@ -145,6 +144,9 @@
       <Project>{5f7c0f00-f641-4368-ad67-6ee0f4aa450e}</Project>
       <Name>vCardPlatformAPI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
